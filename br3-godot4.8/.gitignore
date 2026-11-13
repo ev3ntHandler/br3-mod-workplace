@@ -1,0 +1,7 @@
+# Godot generated import cache and editor state
+.godot/
+
+# OS / editor cruft
+*.tmp
+*.log
+.DS_Store
