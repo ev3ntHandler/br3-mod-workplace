@@ -10,7 +10,8 @@ adjacent `br3-src` folder.
 br3-godot4.8/
 ├── project.godot        # Godot 4.8 project (Forward+, full input map)
 ├── icon.svg
-├── assets -> ../br3-src/Data   # symlink to the original asset tree
+├── setup_assets.sh      # populates assets/ from ../br3-src/Data
+├── assets/              # real directory populated by setup_assets.sh
 ├── scenes/
 │   └── main.tscn        # root scene (plain Node; logic is in autoloads)
 └── scripts/
@@ -24,8 +25,10 @@ br3-godot4.8/
 
 ## Assets
 
-All art, models, audio and data come from the original game via the
-`assets` symlink (`../br3-src/Data`):
+All art, models, audio and data come from the original game in `br3-src/Data`.
+The `assets/` directory is populated from there by `setup_assets.sh` (it uses
+**hard links**, so it is instant and uses no extra disk; it falls back to a
+copy if hard links are unavailable):
 
 - **Models** — the ASCII `FBX 6.1.0` conversions of the `.w3d` models
   (`Cars/3d/*.fbx`, `Tracks/*/3d/*Assets.fbx`, `Shared/3d/*.fbx`).
@@ -72,7 +75,14 @@ All art, models, audio and data come from the original game via the
 
 ## Running
 
-Open `br3-godot4.8` in the **Godot 4.8 editor** and press Play. On first open
-Godot will import the FBX/PNG/WAV assets (this can take a moment given the
-size of the original asset tree). The game starts at the main menu; pick a
-track, pick a car, and race.
+1. From the `br3-godot4.8` folder, run the asset setup script:
+   ```
+   ./setup_assets.sh
+   ```
+   This populates `assets/` from `../br3-src/Data` using hard links (instant).
+2. Open `br3-godot4.8` in the **Godot 4.8 editor** (File → Import, browse to
+   the folder, click Import). On first open Godot will scan and import the
+   FBX/PNG/WAV assets — this can take a little while given the size of the
+   original asset tree, so be patient.
+3. Press Play. The game starts at the main menu; pick a track, pick a car,
+   and race.
