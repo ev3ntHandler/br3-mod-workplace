@@ -1,0 +1,36 @@
+-- [Text] CityTrack105Events
+
+CityTrack105Data_Begin			
+	Name	New track	
+	GameMode	Elimination	
+	TargetTime	100000	
+	Fog	TRUE	
+	FogColor	[230,235,240]	
+	FogRange	[25,600]	
+	Skybox	Night	
+	PlayerCar	[#car: "Player", #position: vector(-0.0569725,42.5209,0.0), #orientation: [0.00,0.00,0.00,1.00]]	
+	AICar	[#car: "FordGT", #position: vector(5.97865,43.6099,0.0), #orientation: [0.00,0.00,0.00,1.00]]	
+	AICar	[#car: "Porsche", #position: vector(-5.30639,45.6869,0.0), #orientation: [0.00,0.00,0.00,1.00]]	
+	AICar	[#car: "AstonMartin", #position: vector(-0.711994,52.162,0.0), #orientation: [0.00,0.00,0.00,1.00]]	
+CityTrack105Data_End			
+			
+CityTrack105Build_Begin			
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(0.0,0.0,0.0), #Nitro_PickUp: [[vector (0.191385,83.0032,1.50008), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(0.00025,250.0,0.00025), #StopSign_Object: [[vector (4.09857,329.561,0.000332177), [0.00,0.00,0.00,1.00] ], [vector (-4.84868,288.375,0.000282079), [0.00,0.00,0.00,1.00] ], [vector (-4.53346,373.199,0.000367194), [0.00,0.00,0.00,1.00] ]]]
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(0.0005,500.0,0.0005)]
+	CreateTile	CityAssets	[#type: "CityCurveDown", #aipath: ["CityCurveDown"], #direction: "SouthNorth", #position: vector(0.00075,750.0,0.000750015), #Nitro_PickUp: [[vector (-0.397913,631.124,1.50063), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityIntersection", #aipath: ["CityIntersection"], #direction: "SouthNorth", #position: vector(-40.0011,1000.0,-3.49905), #CrateBig_Object: [[vector (-45.3521,1089.35,-3.49896), [0.00,-0.38,0.00,0.92] ], [vector (-43.3386,1090.96,-3.49896), [0.00,0.00,0.00,1.00] ], [vector (-42.7853,1084.94,-3.49896), [0.00,0.00,0.00,1.00] ], [vector (-45.4022,1088.61,-1.6334), [0.00,0.00,0.00,1.00] ], [vector (-46.5004,1086.36,-3.49896), [0.00,0.00,0.00,1.00] ], [vector (-27.9185,1092.31,-3.19894), [0.00,0.00,0.00,1.00] ], [vector (-28.9771,1089.0,-3.19894), [0.00,-0.26,0.00,0.97] ]], #LupoBlue: [[vector (-45.0982,993.524,-3.49905), [0.00,0.71,0.00,0.71] ]], #LupoRed: [[vector (-53.9962,1004.62,-3.49905), [0.00,-0.71,0.00,0.71] ]], #TransporterWhite: [[vector (-19.6221,1005.36,-3.49902), [0.00,-0.71,0.00,0.71] ]], #TruckRed: [[vector (-27.6617,995.257,-3.49904), [0.00,0.71,0.00,0.71] ]], #Nitro_PickUp: [[vector (-39.8699,963.718,-1.99908), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityBeachIntersection", #aipath: ["CityBeachIntersection"], #direction: "SouthNorth", #position: vector(-40.0008,1250.0,-3.4988), #OilDrumExplosive_Object: [[vector (-46.1443,1353.19,7.92477), [0.00,0.00,0.00,1.00] ], [vector (-46.1443,1353.2,9.686), [0.00,0.00,0.00,1.00] ], [vector (-46.1443,1353.2,11.4472), [0.00,0.00,0.00,1.00] ], [vector (-46.1443,1353.2,13.2085), [0.00,0.00,0.00,1.00] ], [vector (-46.1443,1353.2,14.9697), [0.00,0.00,0.00,1.00] ], [vector (-34.0015,1353.28,7.92479), [0.00,0.00,0.00,1.00] ], [vector (-34.0023,1353.28,9.68601), [0.00,0.00,0.00,1.00] ], [vector (-34.0023,1353.28,11.4472), [0.00,0.00,0.00,1.00] ], [vector (-34.0023,1353.28,14.9697), [0.00,0.00,0.00,1.00] ], [vector (-44.2135,1353.67,7.92477), [0.00,0.00,0.00,1.00] ], [vector (-44.2139,1353.67,9.686), [0.00,0.00,0.00,1.00] ], [vector (-36.1286,1353.81,7.92478), [0.00,0.00,0.00,1.00] ], [vector (-36.1285,1353.81,9.68601), [0.00,0.00,0.00,1.00] ]], #Dumpster_Object: [[vector (-55.8634,1339.97,-3.19872), [0.00,0.00,0.00,1.00] ], [vector (-23.0321,1340.27,-3.19868), [0.00,0.00,0.00,1.00] ]],#LupoRed: [[vector (-45.0752,1244.28,-3.4988), [0.00,0.71,0.00,0.71] ]], #TransporterWhite: [[vector (-55.1524,1253.35,-3.4988), [0.00,-0.71,0.00,0.71] ]], #BusGrey: [[vector (-28.1572,1254.73,-3.49878), [0.00,-0.71,0.00,0.71] ]], #TruckRed: [[vector (-69.532,1245.67,-3.49883), [0.00,0.71,0.00,0.71] ], [vector (-17.981,1246.42,-3.49877), [0.00,0.71,0.00,0.71] ]], #Nitro_PickUp: [[vector (-40.0403,1214.68,-1.99883), [-0.71,0.00,0.00,0.71] ] ]]]
+	CreateTile	CityAssets	[#type: "CityGrassEntrance", #aipath: ["CityGrassEntrance"], #direction: "SouthNorth", #position: vector(-40.0006,1500.0,-3.49854), #DirectionArrows_Object: [[vector (-52.25,1496.24,-3.49856), [0.00,0.71,0.00,0.71] ], [vector (-28.1109,1498.72,-3.49853), [0.00,0.71,0.00,0.71] ]], #Nitro_PickUp: [[vector (-39.9541,1434.36,-2.24861), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityGrassVertical", #aipath: ["CityGrassVertical"], #direction: "SouthNorth", #position: vector(-40.0003,1750.0,-3.4983)]
+	CreateTile	CityAssets	[#type: "CityGrassVertical", #aipath: ["CityGrassVertical"], #direction: "SouthNorth", #position: vector(-40.0001,2000.0,-13.4981), #Nitro_PickUp: [[vector (-40.0924,1885.2,-2.6579), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityGrassVertical", #aipath: ["CityGrassVertical"], #direction: "SouthNorth", #position: vector(-39.9998,2250.0,-23.4978), #Nitro_PickUp: [[vector (-18.8327,2166.6,-15.6611), [-0.71,0.00,0.00,0.71] ]], #Repair_PickUp: [[vector (-55.9489,2170.23,-16.037), [-0.71,0.00,0.00,0.71] ]], #CashBig_PickUp: [[vector (-20.0891,2301.91,-21.7853), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityGrassExit", #aipath: ["CityGrassExit"], #direction: "SouthNorth", #position: vector(-39.9996,2500.0,-23.4975), #CashSmall_PickUp: [[vector (-39.82,2455.76,-31.0177), [-0.71,0.00,0.00,0.71] ], [vector (-39.9188,2469.83,-31.9146), [-0.71,0.00,0.00,0.71] ], [vector (-39.9707,2486.35,-31.9976), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityDoubleEntrance", #aipath: ["CityDoubleEntrance"], #direction: "SouthNorth", #position: vector(-39.9994,2750.0,-33.4973), #Nitro_PickUp: [[vector (-39.9614,2642.75,-31.9974), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityDoubleExit", #aipath: ["CityDoubleExit"], #direction: "SouthNorth", #position: vector(-39.9991,3000.0,-33.4971), #LogBig_Object: [[vector (-43.8647,3058.28,-33.4973), [0.00,-0.38,0.00,0.92] ], [vector (-41.1893,3057.84,-33.4973), [0.00,-0.38,0.00,0.92] ], [vector (-42.5668,3051.54,-33.4973), [0.00,0.61,0.00,0.79] ]]]
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(-39.9988,3250.0,-33.4972), #Nitro_PickUp: [[vector (-40.2548,3361.85,-31.9971), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(-39.9986,3500.0,-33.497)]
+	CreateTile	CityAssets	[#type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(-39.9983,3750.0,-33.4967)]
+	CreateTile	CityAssets	[#deco: TRUE, #parent: 1, #type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(-0.000251907,-250.0,-0.00025)]
+	CreateTile	CityAssets	[#deco: TRUE, #parent: 16, #type: "CityVertical", #aipath: ["CityVertical"], #direction: "SouthNorth", #position: vector(-39.9981,4000.0,-33.4965)]
+CityTrack105Build_End			

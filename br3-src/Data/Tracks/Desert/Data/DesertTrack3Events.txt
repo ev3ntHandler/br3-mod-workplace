@@ -1,0 +1,43 @@
+-- [Text] DesertTrack3Events
+
+DesertTrack3Data_Begin			
+	Name	Vertigo GooseHunt	
+	GameMode	GooseHun	
+	TargetTime	12000	
+	Fog	TRUE	
+	FogColor	[10,5,20]	
+	FogRange	[100,250]	
+	Skybox	Night	
+	PlayerCar	[#car: "Player", #position: vector(-0.204632,387.272,-0.278319), #orientation: [-0.01,0.00,0.00,1.00]]	
+	AICar	[#car: "Eclipse", #position: vector(-5.77699,332.12,0.0), #orientation: [0.00,-0.02,0.00,1.00]]	
+	AICar	[#car: "Eclipse", #position: vector(4.16045,306.666,0.0), #orientation: [0.00,0.11,0.00,0.99]]	
+	AICar	[#car: "Eclipse", #position: vector(-5.81409,281.549,0.0), #orientation: [0.00,-0.02,0.00,1.00]]	
+DesertTrack3Data_End			
+			
+DesertTrack3Build_Begin			
+	CreateTile	DesertAssets	[#type: "DesertDBridgeVertical", #aipath: ["DesertDBridgeVertical"], #direction: "SouthNorth", #position: vector(0.0,0.0,0.0)]
+	CreateTile	DesertAssets	[#type: "DesertDVerticalRockTransfer1", #aipath: ["DesertDVerticalRockTransfer1"], #direction: "SouthNorth", #position: vector(-0.000395511,250.0,-0.000397478), #Crosses_Object: [[vector (2.83985,261.96,0.0), [0.00,1.00,0.00,0.00] ]]]
+	CreateTile	DesertAssets	[#type: "DesertFDRoadTransferTunnel1", #aipath: ["DesertFDRoadTransferTunnel1"], #direction: "SouthNorth", #position: vector(0.000113062,500.0,-0.00015504), #Nitro_PickUp: [[vector (-0.276489,600.762,14.584), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertFTransitionCurve1", #aipath: ["DesertFTransitionCurve1"], #direction: "SouthWest", #position: vector(-0.000156277,750.0,13.0), #CrateSmall_Object: [[vector (-29.8482,721.829,13.0002), [0.00,0.57,0.00,0.82] ], [vector (-29.6007,721.697,14.2826), [0.00,0.67,0.00,0.74] ]], #DirectionArrows_Object: [[vector (-34.5423,728.01,13.0002), [0.00,0.97,0.00,0.26] ], [vector (-46.7507,735.79,13.0002), [0.00,0.97,0.00,0.25] ]]]
+	CreateTile	DesertAssets	[#type: "DesertFRoadOuterCurve3", #aipath: ["DesertFRoadOuterCurve3"], #direction: "EastNorth", #position: vector(-250.0,750.001,22.9999)]
+	CreateTile	DesertAssets	[#type: "DesertFRoadCurves1", #aipath: ["DesertFRoadCurves1"], #direction: "SouthNorth", #position: vector(-250.0,1000.0,23.0004), #Repair_PickUp: [[vector (-289.547,1040.05,24.5001), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDFTransferTunnel2", #aipath: ["DesertDFTransferTunnel2"], #direction: "SouthNorth", #position: vector(-250.0,1250.0,22.9998)]
+	CreateTile	DesertAssets	[#type: "DesertDCurveOuter1", #aipath: ["DesertDCurveOuter1"], #direction: "SouthWest", #position: vector(-250.001,1500.0,18.0), #Nitro_PickUp: [[vector (-345.214,1493.91,24.2228), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDHorizontalStraight2", #aipath: ["DesertDHorizontalStraight2"], #direction: "EastWest", #position: vector(-500.001,1500.0,22.9998)]
+	CreateTile	DesertAssets	[#type: "DesertDInnerCurve3", #aipath: ["DesertDInnerCurve3"], #direction: "EastNorth", #position: vector(-750.0,1500.0,13.0)]
+	CreateTile	DesertAssets	[#type: "DesertDInnerCurve4", #aipath: ["DesertDInnerCurve4"], #direction: "SouthEast", #position: vector(-750.0,1750.0,13.0), #Repair_PickUp: [[vector (-738.309,1700.38,23.3221), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDHorizontalStraight1", #aipath: ["DesertDHorizontalStraight1"], #direction: "WestEast", #position: vector(-500.001,1750.0,22.9998), #Nitro_PickUp: [[vector (-433.134,1749.65,24.4998), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDHorizontalStraight1", #aipath: ["DesertDHorizontalStraight1"], #direction: "WestEast", #position: vector(-250.001,1750.0,22.9999)]
+	CreateTile	DesertAssets	[#type: "DesertDHorizontalStraight1", #aipath: ["DesertDHorizontalStraight1"], #direction: "WestEast", #position: vector(-0.000541687,1750.0,22.9999)]
+	CreateTile	DesertAssets	[#type: "DesertDCurveOuter2", #aipath: ["DesertDCurveOuter2"], #direction: "WestNorth", #position: vector(249.999,1750.0,23.0)]
+	CreateTile	DesertAssets	[#type: "DesertDVerticalStraight", #aipath: ["DesertDVerticalStraight"], #direction: "SouthNorth", #position: vector(250.0,2000.0,19.0003), #Repair_PickUp: [[vector (256.385,2033.96,20.5003), [-0.71,0.00,0.00,0.71] ]], #HiddenPackage_PickUp: [[vector (263.671,2023.9,20.908), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDCurly1", #aipath: ["DesertDCurly1"], #direction: "SouthNorth", #position: vector(250.0,2250.0,18.9999)]
+	CreateTile	DesertAssets	[#type: "DesertDCurly2", #aipath: ["DesertDCurly2"], #direction: "SouthNorth", #position: vector(220.001,2500.0,44.0), #CashBig_PickUp: [[vector (203.064,2482.74,42.3955), [-0.71,0.00,0.00,0.71] ]], #CashSmall_PickUp: [[vector (204.763,2469.75,43.3818), [-0.71,0.00,0.00,0.71] ], [vector (206.596,2457.86,44.0877), [-0.71,0.00,0.00,0.71] ], [vector (209.92,2445.59,44.6594), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDVerticalStraight", #aipath: ["DesertDVerticalStraight"], #direction: "SouthNorth", #position: vector(220.001,2750.0,29.0004), #Nitro_PickUp: [[vector (220.03,2694.03,30.5004), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDBridgeVertical", #aipath: ["DesertDBridgeVertical"], #direction: "SouthNorth", #position: vector(220.001,3000.0,29.0004), #StopSign_Object: [[vector (221.988,2915.11,29.0739), [-0.00,0.00,0.00,1.00] ], [vector (227.287,2914.61,29.0384), [0.00,-0.13,0.01,0.99] ], [vector (228.92,3044.15,29.0055), [0.00,-0.08,0.00,1.00] ], [vector (234.322,3042.66,29.0909), [-0.01,0.18,0.00,0.98] ], [vector (238.788,3042.0,29.1026), [-0.01,-0.21,-0.00,0.98] ]], #Nitro_PickUp: [[vector (223.801,3098.48,30.5141), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDBridgeVertical", #aipath: ["DesertDBridgeVertical"], #direction: "SouthNorth", #position: vector(220.001,3250.0,29.0004), #StopSign_Object: [[vector (216.398,3142.17,29.0968), [0.00,-0.13,0.01,0.99] ], [vector (222.472,3141.18,29.0004), [0.00,0.13,0.00,0.99] ], [vector (232.435,3139.8,29.0911), [0.00,0.00,0.00,1.00] ], [vector (228.678,3286.07,29.0458), [-0.00,-0.11,0.01,0.99] ], [vector (233.135,3288.64,29.0863), [-0.00,0.28,-0.01,0.96] ], [vector (236.714,3286.41,29.1416), [0.00,-0.11,-0.01,0.99] ]], #Nitro_PickUp: [[vector (222.375,3359.48,30.515), [-0.71,0.00,0.00,0.71] ]]]
+	CreateTile	DesertAssets	[#type: "DesertDBridgeVertical", #aipath: ["DesertDBridgeVertical"], #direction: "SouthNorth", #position: vector(220.001,3500.0,29.0004), #StopSign_Object: [[vector (219.255,3403.55,29.1344), [0.00,-0.00,0.01,1.00] ], [vector (224.93,3404.25,29.0513), [0.00,-0.00,0.01,1.00] ]], #Ramp4_Object: [[vector (229.509,3430.8,29.0005), [0.00,0.00,0.00,1.00] ]]]
+	CreateTile	DesertAssets	[#deco: TRUE, #parent: 1, #type: "DesertDCurly1", #aipath: ["DesertDCurly1"], #direction: "SouthNorth", #position: vector(29.9998,-250.0,-25.0004)]
+	CreateTile	DesertAssets	[#deco: TRUE, #parent: 4, #type: "DesertFOffroadVertical2", #aipath: ["DesertFOffroadVertical2"], #direction: "SouthNorth", #position: vector(0.0,1000.0,3.0007)]
+	CreateTile	DesertAssets	[#deco: TRUE, #parent: 22, #type: "DesertDVerticalStraight", #aipath: ["DesertDVerticalStraight"], #direction: "SouthNorth", #position: vector(220.001,3750.0,29.0005)]
+DesertTrack3Build_End			

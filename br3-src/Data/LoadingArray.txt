@@ -1,0 +1,2 @@
+\Data\Globals.txt	[#cast: "Internal"]
+\Data\Events.txt	[#cast: "Internal"]

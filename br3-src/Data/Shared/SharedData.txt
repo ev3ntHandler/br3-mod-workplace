@@ -1,0 +1,161 @@
+//-------------------------------------------------------------------------------------------------------------------------------------------
+//TRIGGERS
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Triggers_Begin
+	ChallengeCompleted
+	TimeBeat	{:Timer}<={:TargetTime}
+	KilledAllAI	{:AIsKilled}={:AIsBuild}
+	NearGasStation	{:Player1Position}<=50.0
+Triggers_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Rewards
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Rewards_Begin
+	UnlockRandomBodyKitPart	UnlockRandomBodyKitPart
+	UnlockTrack	UnlockTrack
+	UnlockNissan
+	UnlockPorsche	UnlockPorsche
+	UnlockUberGun	UnlockUberGun
+	UnlockDualMachineGun	UnlockPrimaryWeapons	[#weapon: "DualMachineGun"]
+Rewards_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+//Weapons
+// Damage explanation
+//#damage = normal damage. Linear list with 2 entries (min/max). Damage is random value between min/max
+//#areadamage = area damage. Linear list with 3 entries (min/max/distance). Damage is random value between min/max. At max distance the damage is low
+// closer to the source damage is higher (linear).
+//-------------------------------------------------------------------------------------------------------------------------------------------
+PrimaryWeapons_Begin
+	Default	[#name: "None", #location: [0], cost: 0]
+	NoPrimary	[#name: "NO PRIMARY WEAPON", #location: [0], cost: 0]
+	MachineGun	[#name: "MACHINE GUN", #location: [1], #cost: 10000, #ammo: 99, #rof: 8, #accuracy: 1.0, #damage: [1, 3]]
+	DualMachineGun	[#name: "DUAL MACHINE GUN", #location: [1, 2], #cost: 200000, #ammo: 99, #rof: 8, #accuracy: 1.0, #damage: [1, 3]]
+	MiniGun	[#name: "MINI GUN", #location: [1], #cost: 300000, #ammo: 99, #rof: 14, #accuracy: 1.0, #damage: [2, 6], #chargeTime: 0.5]
+	DualMiniGun	[#name: "DUAL MINI GUN", #location: [1, 2], #cost: 600000, #ammo: 99, #rof: 14, #accuracy: 1.0, #damage: [2, 6], #chargeTime: 0.5]
+	Laser	[#name: "LASER", #location: [1], #cost: 400000, #ammo: 99, #rof: 1, #accuracy: 1.0, #chargeTime: 3, #damage: [1, 30]]
+	FlameThrower	[#name: "FLAME THROWER" , #location: [1], #cost: 500000, #ammo: 99, #rof: 8, #accuracy: 1.0, #damage: [1, 3]]
+PrimaryWeapons_End
+	
+SecondaryWeapons_Begin
+	Default	[#name: "None", #location: [0], cost: 0]
+	NoSecondary	[#name: "NO SECONDARY WEAPON", #location: [0], cost: 0]
+	RocketPod	[#name: "ROCKET POD", #location: [3,4], #cost: 100000, #ammo: 12, #rof: 3, #accuracy: 1.0, #damage: [20, 40], #areaDamage: [10, 30, 15]]
+	MineDeployer	[#name: "MINE LAYER", #location: [2], #cost: 200000, #ammo: 15, #rof: 1, #accuracy: 1.0, #range: 3.0, #damage: [20, 40], #areaDamage: [5, 18, 15]]
+	GrenadeDeployer	[#name: "GRENADE LAYER", #location: [2], #cost: 400000, #ammo: 10, #rof: 1, #accuracy: 1.0, #range: 3.0, #damage: [20, 40], #areaDamage: [0, 10, 10]]
+	GrenadeLauncher	[#name: "GRENADE LAUNCHER", #location: [1], #cost: 600000, #ammo: 8, #rof: 1, #accuracy: 1.0, #damage: [20, 40], #areaDamage:[15, 25, 15]]
+	HomingMissile	[#name: "HOMING MISSILE", #location: [1], #cost: 800000, #ammo: 1, #rof: 1, #accuracy: 1.0, #damage: [50, 80], #areaDamage: [10, 50, 15]]
+	Missile	[#name: "MISSILE", #location: [1], #cost: 1000000, #ammo: 1, #rof: 1, #accuracy: 1.0, #damage: [50, 80], #areaDamage: [10, 50, 15]]
+	BDM	[#name: "FATHER OF ALL MISSILES", #location: [1], #cost: 1500000, #ammo: 1, #rof: 1, #accuracy: 1.0, #damage: [50, 80], #areaDamage: [10, 50, 15]]
+	Airstrike	[#name: "INFERNO", #location: [1], #cost: 2000000, #ammo: 1, #rof: 1, #accuracy: 1.0, #damage: [50, 80], #areaDamage: [10, 50, 15]]
+	//Tank
+	MainGun	[#name: "MAIN GUN", #location: [1], #cost: 0, #ammo: 5, #rof: 1, #accuracy: 1.0, #damage: [15, 40], #areaDamage: [15, 40, 15]]
+SecondaryWeapons_End	
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Upgraded
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CarUpgrades_Begin
+	Engine	[#name: "ENGINE UPGRADE", #cost: [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000]]
+	Handling	[#name: "HANDLING UPGRADE", #cost: [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000]]
+	Armor	[#name: "ARMOR UPGRADE", #cost: [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000]]
+	Primary	[#name: "PRIMARY WEAPON UPGRADE", #cost: [50000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 50000]]
+	Secondary	[#name: "SECONDARY WEAPON UPGRADE", #cost: [75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000]]
+CarUpgrades_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// BodyKits
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CarBodyKits_Begin
+	Unlocked	[#name: "STANDARD", #skin1: #unlocked, #frontBumper1: #unlocked, #rearBumper1: #unlocked, #rims1: #unlocked, #noSpoiler: #unlocked]
+	BMW	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Seat	[#name: "SPECIAL", #skin2: 25000, #frontBumper: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Nissan	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Eclipse	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Corvette	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Mustang	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	AudiR8	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	FordGT	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	Porsche	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims2: 5000, #spoiler: 7500]
+	AstonMartin	[#name: "SPECIAL", #skin2: 25000, #frontBumper2: 10000, #rearBumper2: 10000, #rims: 5000, #spoiler: 7500]
+CarBodyKits_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Physics
+//-------------------------------------------------------------------------------------------------------------------------------------------
+PhysicsObjects_Begin
+	//------------------------------------------------------------------------------------------------------------------------
+	//Parameters	[#weight: 250.0, #type: #none, #health: #infinite, #score: 0]
+	//Weight		integer or float or #static
+	//Type (defines behavior on ground & soundeffect when hit)	#none, #wood, #plastic, #concrete, #metal
+	//Health		integer or float or #infinite
+	//Score		points awarded when destroyed
+	//When weight is #static the object is not dynamic and can not be moved
+	//The parameters above are the default ones
+	// #explosion: triggers explosion. does standard area damage with [5, 15, 8]
+	------------------------------------------------------------------------------------------------------------------------
+	Default_Object	[#weight: #static, #type: #none, #health: #infinite, #score: 0]
+	Pylon_Object	[#weight: 180.0, #type: #plastic]
+	CrateSmall_Object	[#weight: 1000.0, #type: #wood, #health: 15, #score: 50, #effect: #explosion]
+	OilDrumNormal_Object	[#weight: 900.0, #type: #metal, #health: 20, #score: 75, #effect: #explosion]
+	OilDrumExplosive_Object	[#weight: 900.0, #type: #metal, #health: 10, #score: 100, #effect: #explosion]
+	VendingMachine_Object	[#weight: 2000.0, #type: #metal, #health: 20, #score: 100, #effect: #explosion]
+	RoadBlock_Object	[#weight: 10000.0, #type: #concrete]
+	CrateBig_Object	[#weight: 2000.0, #type: #wood, #score: 200, #health: 20, #score: 100, #effect: #explosion]
+	StopSign_Object	[#weight: 800.0, #type: #wood]
+	LogBig_Object	[#weight: 6000.0, #type: #wood]
+	LogSmall_Object	[#weight: 3000.0, #type: #wood]
+	GarbageBag_Object	[#weight: 180.0, #type: #plastic, #health: 5, #score: 10, #effect: #explosion]
+	SheetSmall_Object	[#weight: 200.0, #type: #metal]
+	SheetBig_Object	[#weight: 400.0, #type: #metal]
+	Ramp1_Object	[#weight: #static, #type: #metal]
+	Ramp2_Object	[#weight: #static, #type: #metal]
+	Ramp3_Object	[#weight: #static, #type: #wood]
+	Ramp4_Object	[#weight: #static, #type: #wood]
+	ArrowsLeft_Object	[#weight: #static, #type: #metal]
+	ArrowsRight_Object	[#weight: #static, #type: #metal]
+	Crosses_Object	[#weight: #static, #type: #metal]
+	PhoneBooth_Object	[#weight: 3000.0, #type: #metal, #health: 20, #score: 250, #effect: #explosion]
+	ParkingMeter_Object	[#weight: 1000.0, #type: #metal, #health: 20, #score: 50, #effect: #explosion]
+	GasTank_Object	[#weight: #static, #type: #metal, #health: 30, #score: 750, #effect: #explosion]
+	GasTankDestroyed_Object	[#weight: #static, #type: #metal]
+	MailBox_Object	[#weight: 1000.0, #type: #metal, #health: 20, #score: 250, #effect: #explosion]
+	Dumpster_Object	[#weight: 3000.0, #type: #metal, #health: 20, #score: 200, #effect: #explosion]
+	DirectionArrows_Object	[#weight: 20000.0, #type: #concrete]
+	SandBag_Object	[#weight: 500.0]
+	AdSign_Object	[#weight: 500.0, #type: #metal, #health: 25, #score: 50, #effect: #explosion]
+PhysicsObjects_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Bloom
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Bloom_Begin
+	Default	[#colorFilter: [#brightness: -55, #contrast: 35, #saturation: 80, #hue: 0], #blur: [#BlurX: 5, #BlurY: 5, #quality: 3], #intensity: 35]
+	Logo	[#colorFilter: [#brightness: 0, #contrast: 55, #saturation: 15, #hue: 15], #blur: [#BlurX: 5, #BlurY: 5, #quality: 2], #intensity: 35]
+	Car	[#colorFilter: [#brightness: -55, #contrast: 65, #saturation: 35, #hue: 0], #blur: [#BlurX: 7, #BlurY: 7, #quality: 3], #intensity: 75]
+	Main	[#colorFilter: [#brightness: 30, #contrast: 35, #saturation: 35, #hue: 0], #blur: [#BlurX: 1, #BlurY: 9, #quality: 2], #intensity: 100]
+	Earth	[#colorFilter: [#brightness:-80, #contrast: -35, #saturation: 10, #hue: 0], #blur: [#blurX: 7, #blurY: 7, #quality: 3], #intensity: 65]
+	Hangar	[#colorFilter: [#brightness: 0, #contrast: 45, #saturation: 20, #hue: 0], #blur: [#BlurX: 4, #BlurY: 4, #quality: 3], #intensity: 30]
+	HangarOld	[#colorFilter: [#brightness: 15, #contrast: -15, #saturation: 45, #hue: 0], #blur: [#blurX: 5, #blurY: 5, #quality: 3], #intensity: 70]
+	DesertTrack1	[#colorFilter: [#brightness: -25, #contrast: 35, #saturation: 5, #hue: 0], #blur: [#BlurX: 2, #BlurY: 2, #quality: 5], #intensity: 20]
+	SnowTrack1	[#colorFilter: [#brightness: -25, #contrast: 35, #saturation: 15, #hue: 0], #blur: [#BlurX: 4, #BlurY: 4, #quality: 2], #intensity: 35]
+	SnowTrack5	[#colorFilter: [#brightness: 25, #contrast: -15, #saturation: 20, #hue: 0], #blur: [#BlurX: 3, #BlurY: 3, #quality: 5], #intensity: 45]
+Bloom_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Particles
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Particles_Begin
+	EngineSmoke	[#amount: 45, #lifeTime: 750.0, #minSpeed: 0.5, #maxSpeed: 2.0, #sizeStart: 1.3, #sizeEnd: 2.2, #angle: 45.0, #texture: "Smoke_Texture"]
+	GrenadeSmoke	[#amount: 45, #lifeTime: 750.0, #minSpeed: 0.5, #maxSpeed: 1.5, #sizeStart: 0.5, #sizeEnd: 2.0, #angle: 40.0, #colorStart: rgb(255, 255, 255), #colorEnd: rgb(0, 0, 0), #gravity: vector(0.0, 0.0, 0.20), #texture: "GrenadeSmoke_Texture"]
+	
+	//Stars	[#amount: 20, #lifeTime: 500.0, #minSpeed: 2.0, #maxSpeed: 4.0, #sizeStart: 0.3, #sizeEnd: 1.0, #blendStart: 0.0, #distribution: #gaussian, #angle: 70.0, #gravity: vector(0.0, 0.0, 0.20), #texture: "PartStars_Texture"]
+	//Wheel	[#amount: 20, #lifeTime: 500.0, #minSpeed: 1.0, #maxSpeed: 3.0, #sizeStart: 0.3, #sizeEnd: 1.5, #distribution: #gaussian, #angle: 100.0, #gravity: vector(0.0, 0.0, -0.25)]
+	//RocketExplosion	[#amount: 20, #lifeTime: 2000.0, #minSpeed: 12.0, #maxSpeed: 14.5, #sizeStart: 4.0, #sizeEnd: 10.0, #colorEnd: rgb(128, 128, 128), #angle: 120.0, #drag: 7.0, #mode: #burst, #loop: FALSE, #texture: "PartExplosion_Texture"]
+	//DustExplosion	[#amount: 10, #lifeTime: 2000.0, #minSpeed: 10.0, #maxSpeed: 14.0, #sizeStart: 5.0, #sizeEnd:7.0, #colorEnd: rgb(128, 128, 128), #angle: 120.0, #drag: 10.0, #mode: #burst, #loop: FALSE, #texture: "PartSmoke_Texture"]
+	//Debris	[#amount: 20, #lifeTime: 1000.0, #minSpeed: 8.0, #maxSpeed: 14.0, #blendStart: 0.0, #blendEnd: 100.0, #angle: 100.0, #mode: #burst, #loop: FALSE, #gravity: vector(0.0, 0.0, 0.0), #texture: "PartDebris_Texture"]	
+	//Exhaust	[#amount: 15, #lifeTime: 750.0, #minSpeed: 0.0, #maxSpeed: 0.55, #sizeStart: 0.03, #sizeEnd: 0.7, #colorEnd: rgb(64, 64, 64), #angle: 40.0, #gravity: vector(0.0, 0.0, 0.02), #texture: "PartSmoke_Texture"]
+	//Nitro	[#amount: 15, #lifeTime: 250.0, #blendStart: 0.0, #minSpeed: 0.8, #maxSpeed: 1.0, #sizeStart: 0.05, #sizeEnd: 1.0, #colorStart: rgb(255,255,153), #angle: 120.0, #gravity: vector(0.0, 0.0, 0.02), #texture: "PartNitro_Texture"]
+	//ItemStars	[#amount: 25, #lifeTime: 2500.0, #minSpeed: 8.0, #maxSpeed: 15.0, #sizeStart: 1.75, #sizeEnd: 0.0, #angle: 120.0, #drag: 3.0, #gravity: vector(0.0, 0.0, -0.35), #mode: #burst, #loop: FALSE, #texture: "PartItems_Texture"]
+Particles_End

@@ -1,0 +1,44 @@
+-- [Text] JungleTrack107Events
+
+JungleTrack107Data_Begin			
+	Name	New track	
+	GameMode	Elimination	
+	TargetTime	10000	
+	Fog	TRUE	
+	FogColor	[230,235,240]	
+	FogRange	[25,600]	
+	Skybox	SnowTwilight	
+	PlayerCar	[#car: "Player", #position: vector(123.327,28.0685,-0.31514), #orientation: [-0.01,0.38,0.00,0.92]]	
+	AICar	[#car: "Nissan", #position: vector(64.1931,27.2318,-0.0099953), #orientation: [-0.00,0.13,0.00,0.99]]	
+	AICar	[#car: "Eclipse", #position: vector(104.194,93.0842,-4.36658), #orientation: [-0.00,0.71,0.00,0.71]]	
+	AICar	[#car: "Corvette", #position: vector(123.29,60.2625,-1.81513), #orientation: [-0.04,0.61,0.01,0.79]]	
+JungleTrack107Data_End			
+			
+JungleTrack107Build_Begin			
+	CreateTile	JungleAssets	[#type: "JungleBeachInnerCurve1", #aipath: ["JungleBeachInnerCurve1"], #direction: "SouthNorth", #position: vector(0.0,0.0,0.0)]
+	CreateTile	JungleAssets	[#type: "JungleBeachVertical1", #aipath: ["JungleBeachVertical1"], #direction: "SouthNorth", #position: vector(0.0113745,250.0,0.00202959), #Nitro_PickUp: [[vector (70.2168,328.516,-2.00525), [0.17,0.72,0.19,0.64] ]]]
+	CreateTile	JungleAssets	[#type: "JungleBeachVertical2", #aipath: ["JungleBeachVertical2"], #direction: "SouthNorth", #position: vector(0.0116386,500.0,0.00227959)]
+	CreateTile	JungleAssets	[#type: "JungleBeachInnerCurve2", #aipath: ["JungleBeachInnerCurve2"], #direction: "SouthEast", #position: vector(0.0118723,750.0,0.00250774), #Nitro_PickUp: [[vector (100.229,672.147,-1.6821), [0.17,0.72,0.19,0.64] ]]]
+	CreateTile	JungleAssets	[#type: "JungleBeachOuterCurve2", #aipath: ["JungleBeachOuterCurve2"], #direction: "WestNorth", #position: vector(250.012,749.989,0.00275639)]
+	CreateTile	JungleAssets	[#type: "JungleBeachOuterCurve1", #aipath: ["JungleBeachOuterCurve1"], #direction: "SouthWest", #position: vector(250.012,999.989,-0.00462978)]
+	CreateTile	JungleAssets	[#type: "JungleBeachHorizontal1", #aipath: ["JungleBeachHorizontal1"], #direction: "EastWest", #position: vector(0.0121841,999.989,-0.00487978), #Nitro_PickUp: [[vector (10.2064,1040.75,-2.7347), [0.17,0.72,0.19,0.64] ]]]
+	CreateTile	JungleAssets	[#type: "JungleBeachEntrance", #aipath: ["JungleBeachEntrance"], #direction: "EastSouth", #position: vector(-249.988,999.989,-0.00512978)]
+	CreateTile	JungleAssets	[#type: "JungleRoadTransferDirt2", #aipath: ["JungleRoadTransferDirt2"], #direction: "NorthSouth", #position: vector(-249.988,749.989,4.99462), #DirectionArrows_Object: [[vector (-251.566,723.379,4.66636), [-0.01,-0.79,-0.00,0.61] ], [vector (-254.545,709.088,4.68676), [-0.00,-0.70,0.00,0.71] ], [vector (-256.418,788.641,4.50692), [-0.05,-0.53,0.04,0.85] ]]]
+	CreateTile	JungleAssets	[#type: "JungleRoadCurve3", #aipath: ["JungleRoadCurve3"], #direction: "NorthWest", #position: vector(-249.988,499.989,4.99437), #Nitro_PickUp: [[vector (-282.115,528.584,7.01292), [0.17,0.72,0.19,0.64] ]]]
+	CreateTile	JungleAssets	[#type: "JungleRoadCurve4", #aipath: ["JungleRoadCurve4"], #direction: "EastNorth", #position: vector(-499.989,499.995,5.00802)]
+	CreateTile	JungleAssets	[#type: "JungleRoadCurve2", #aipath: ["JungleRoadCurve2"], #direction: "SouthWest", #position: vector(-499.972,749.992,5.00827)]
+	CreateTile	JungleAssets	[#type: "JungleRoadCurve1", #aipath: ["JungleRoadCurve1"], #direction: "EastSouth", #position: vector(-749.954,749.986,4.99407)]
+	CreateTile	JungleAssets	[#type: "JungleRoadVertical1", #aipath: ["JungleRoadVertical1"], #direction: "NorthSouth", #position: vector(-749.952,499.986,4.99381)]
+	CreateTile	JungleAssets	[#type: "JungleRoadVertical4", #aipath: ["JungleRoadVertical4"], #direction: "NorthSouth", #position: vector(-785.55,249.991,-9.37134)]
+	CreateTile	JungleAssets	[#type: "JungleRoadVertical2", #aipath: ["JungleRoadVertical2"], #direction: "NorthWest", #position: vector(-816.985,-0.00615937,-18.8539)]
+	CreateTile	JungleAssets	[#type: "JungleBeachInnerCurve1", #aipath: ["JungleBeachInnerCurve1"], #direction: "EastNorth", #position: vector(-499.988,999.977,-0.00537984)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 16, #type: "JungleRoadVertical3", #aipath: ["JungleRoadVertical3"], #direction: "EastNorth", #position: vector(-816.987,-250.006,-17.5051)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 1, #type: "JungleBeachOuterCurve1", #aipath: ["JungleBeachOuterCurve1"], #direction: "EastNorth", #position: vector(250.0,0.0109988,0.000250054)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 3, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 2, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 5, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 6, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 6, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 7, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+	CreateTile	JungleAssets	[#deco: TRUE, #parent: 8, #type: "JungleBeachSea1", #aipath: ["JungleBeachSea1"], #direction: "EastNorth", #position: vector(250.012,500.0,0.00252959)]
+JungleTrack107Build_End			

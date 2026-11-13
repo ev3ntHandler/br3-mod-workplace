@@ -1,0 +1,11 @@
+-- [Text] CityEvents
+
+CityTextures_Begin
+	CreateTexture	CityAssets	[#filename: "CityStreet_Texture"]
+	CreateTexture	CityAssets	[#filename: "CityBuildings_Texture"]
+	CreateTexture	CityAssets	[#filename: "CityTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	CityAssets	[#filename: "Wall_Texture", #renderFormat: #rgba8888]
+	CreateTexture	CityAssets	[#filename: "Misc_Texture"]
+	CreateTexture	CityAssets	[#filename: "Advertisements_Texture"]
+	CreateTexture	CityAssets	[#filename: "Waves_Texture"]
+CityTextures_End

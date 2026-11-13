@@ -1,0 +1,11 @@
+-- [Text] JungleEvents
+
+JungleTextures_Begin
+	CreateTexture	JungleAssets	[#filename: "JungleStreet_Texture"]
+	CreateTexture	JungleAssets	[#filename: "JungleBuildings_Texture"]
+	CreateTexture	JungleAssets	[#filename: "JungleTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	JungleAssets	[#filename: "Waves_Texture"]
+	CreateTexture	JungleAssets	[#filename: "Wall_Texture", #renderFormat: #rgba8888]
+	CreateTexture	JungleAssets	[#filename: "Misc_Texture"]
+	CreateTexture	JungleAssets	[#filename: "Advertisements_Texture"]
+JungleTextures_End

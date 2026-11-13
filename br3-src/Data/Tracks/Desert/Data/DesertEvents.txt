@@ -1,0 +1,10 @@
+-- [Text] DesertEvents
+
+DesertTextures_Begin
+	CreateTexture	DesertAssets	[#filename: "DesertStreet_Texture"]
+	CreateTexture	DesertAssets	[#filename: "DesertBuildings_Texture"]
+	CreateTexture	DesertAssets	[#filename: "DesertTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	DesertAssets	[#filename: "Wall_Texture", #renderFormat: #rgba8888]
+	CreateTexture	DesertAssets	[#filename: "Misc_Texture"]
+	CreateTexture	DesertAssets	[#filename: "Advertisements_Texture"]
+DesertTextures_End

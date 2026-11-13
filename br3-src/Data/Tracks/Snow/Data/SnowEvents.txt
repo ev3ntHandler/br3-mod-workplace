@@ -1,0 +1,10 @@
+-- [Text] SnowEvents
+
+SnowTextures_Begin
+	CreateTexture	SnowAssets	[#filename: "SnowStreet_Texture"]
+	CreateTexture	SnowAssets	[#filename: "SnowBuildings_Texture"]
+	CreateTexture	SnowAssets	[#filename: "SnowTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	SnowAssets	[#filename: "Wall_Texture", #renderFormat: #rgba8888]
+	CreateTexture	SnowAssets	[#filename: "Misc_Texture"]
+	CreateTexture	SnowAssets	[#filename: "Advertisements_Texture"]
+SnowTextures_End

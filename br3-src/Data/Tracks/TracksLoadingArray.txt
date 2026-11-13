@@ -1,0 +1,4 @@
+\Data\{:Scene}\{:World}\3d\	[#cast: "Tracks"]
+\Data\{:Scene}\{:World}\Audio\	[#cast: "Tracks"]
+\Data\{:Scene}\{:World}\Textures\	[#cast: "Tracks"]
+\Data\{:Scene}\{:World}\Data\	[#cast: "TrackData"]

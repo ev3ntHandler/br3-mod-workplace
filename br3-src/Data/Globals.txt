@@ -1,0 +1,181 @@
+// General
+Name	Burnin' Rubber 3
+Version	2.0
+PrefFile	XBR3Data2.txt
+GameSaved	FALSE
+LoadedData	[:]
+Save	TRUE
+LocalSave	FALSE
+Cheat	FALSE
+SlowMo	FALSE
+
+// Preloading
+GeneralHolder	#none
+CarsDownloaded	FALSE
+SharedDownloaded	FALSE
+DataHolder	#none
+DataDownloaded	FALSE
+TrackHolder	#none
+TrackDownloaded	FALSE
+
+// Main menu globals
+Font	NCC1701A *
+MenuInit	FALSE
+CurrentMenu	Logo
+Font3DInit	FALSE
+LogoInit	FALSE
+MainInit	FALSE
+MainCInit	FALSE
+DomInit	FALSE
+StatsInit	FALSE
+OptionsInit	FALSE
+HelpInit	FALSE
+CashInit	FALSE
+TrackSelectionInit	FALSE
+SelectedContinent	#none
+SelectedGameMode	#none
+SelectedLocation	#none
+LastBuildText	#none
+SelectedTrack	[]
+CurrentMarkers	[#buttons: [], #misc: []]
+CarSelectionInit	FALSE
+DailyChallenge	FALSE
+PressedButton	#none
+SelectedTab	#none
+MenuIntSpeed	25
+SelectedCar	BMW
+SelectedCarTemplate	[:]
+SelectedWeapon	#none
+SelectedBodyKit	#none
+SelectedUpgrade	#none
+CarStatistics	FALSE
+CarsBuild	[]
+Result3DText	[]
+// Interface (ingame globals)
+PauseInit	FALSE
+FailedInit	FALSE
+CompletedInit	FALSE
+ResultsInit	FALSE
+LoadingInit	FALSE
+HighscoreMember	member("Highscore")
+
+// available stuff
+AvailableCars	["BMW",  "AstonMartin", "AudiR8", "Corvette", "DodgeRam", "FordGT", "Marcos", "MiniCooper", "Mustang", "Porsche", "Seat", "BlackTruck", "Tank", "Apache", "Eclipse", "Nissan"]
+AvailablePrimaryWeapons	["NoPrimary", "MachineGun", "DualMachineGun", "MiniGun", "DualMiniGun", "Laser", "FlameThrower"]
+AvailableSecondaryWeapons	["NoSecondary", "RocketPod", "MineDeployer", "GrenadeDeployer", "GrenadeLauncher", "Missile", "HomingMissile", "BDM", "Airstrike"]
+Bosses	[#MiniCooper, #Marcos, #DodgeRam, #BlackTruck, #Tank, #Apache]
+
+// Scene (Scene can be Menu or Tracks) (Subscene can be Logo, Main, TrackSelection, CarSelection)
+Scene	Menu
+SubScene	Logo
+
+// Game specific (Gamemodes: Default, Race, BattleRace, Elimination, Survivor, GooseHunt, Rampage, RivalBattle, BossBattle) These are globals that will be updated from track data events
+TrackName	Default Track
+GameMode	BattleRace
+Target	120000
+PrizeMoney	0
+TimeBonus	10000
+Rewards	[]
+Fog	FALSE
+FogColor	[0,0,0,0]
+FogRange	[0,100]
+Skybox	Snow
+
+//Game Data
+PlayerName	Player
+Cash	10000
+Car	BMW
+Score	0
+Bonus	0
+TotalScore	0
+Items	[]
+DailyPlayed	#new
+DailyTrack	#none
+
+// standard unlock settings
+CarsList	[#BMW: #unlocked]
+UpgradesList	[:]
+BodykitList	[#BMW:[:],#AstonMartin:[:],#AudiR8:[:],#Corvette:[:],#FordGT:[:],#Eclipse:[:],#Mustang:[:],#Nissan:[:],#Porsche:[:],#Seat:[:], #miniCooper: [:], #DodgeRam: [:], #marcos: [:], #blackTruck: [:], #Tank: [:], #apache: [:]]
+PrimaryWeaponsList	[#noPrimary: #unlocked, #machineGun: #unlocked]
+SecondaryWeaponsList	[#noSecondary: #unlocked]
+TrackList	[#CityTrack1: #new, #cityTrack2: #new, #CityTrack3: #new, #cityTrack4: #new]
+ShadowScale	[#AstonMartin: 9.806079,#AudiR8: 9.636750,#BlackTruck: 17.74802,#BMW: 9.581443,#Corvette: 10.47961,#DodgeRam: 9.67914,#Eclipse: 9.043279,#FordGT: 9.225196,#Marcos: 10.06979,#MiniCooper: 7.278663,#Mustang: 9.818944,#Nissan: 9.521826,#Porsche: 10.512556,#Seat: 9.280262,#Tank: 16.0, #Apache: 12.0]
+
+// Stats & Trophies
+HiddenPackageList	[]
+Statistics	[#time:0,#wd:[0, 51],#played:0,#completed:0,#failed:0,#race:0,#battlerace:0,#rampage:0,#rivalBattle:0,#survivor:0,#goosehunt:0,#elimination:0,#bossbattle:0,#wrecked:0,#rivalWrecked:0,#vehicles:0,#cars:[1,16],#upgrades:[0,5],#bodykits:[0,50],#weapons:[1,8],#packages:[0,51],#detonators:0,#bullets:0,#timeB:0]
+Trophies	[#Worlddomination:0,#ilikemoney:0,#menacetosociety:0,#toughguy:0,#ibelieveicanfly:0,#actionhero:0,#speeddemon:0,#greedy:0,#godofwar:0,#eyeofthetiger:0,#thedestructor:0,#imnoquitter:0,#thunderstruck:0,#monkeybusiness:0,#pigsFTW:0]
+
+// Track specific
+World	City
+Track	1
+
+// Player specific
+Players	1
+PlayerCar1	Player
+PlayerCar2	Player
+PlayerInput1	#keys
+PlayerInput2	#keys
+PlayerKeys1	[#forward: 126 , #backward: 125, #left: 123, #right: 124, #brake: "Shift", #action1: "z", #action2: "x", #backwardCam: "c"]
+PlayerKeys2	[#forward: "e" , #backward: "d", #left: "s", #right: "f", #brake: TAB, #action1: "q", #action2: "w", #backwardCam: "r"]
+PlayerJoystick1	[:]
+PlayerJoystick2	[:]
+PlayerStates	[#update_Waypoints, #update_keyInput, #update_items, #update_effects, #update_sound, #update_damage, #update_weapons]
+PlayerWeapons1	TRUE
+PlayerWeapons2	TRUE
+PlayerWeaponsActive1	TRUE
+PlayerWeaponsActive2	TRUE
+
+// AI Specific
+AI	3
+AICar1	Default
+AICar2	Default
+AICar3	Default
+AICar4	Default
+AIStates	[#update_Waypoints, #update_Racing, #update_effects, #update_sound2, #update_damage, #update_weapons, #update_war]
+AIWeapons	TRUE
+AIWeaponsActive	TRUE
+AIStuckTime	1250
+
+// Delays
+DelayAIWeapons	5000
+EliminationTime	10000
+DelayStartElimination	5000
+DelayNextElimination	10000
+
+// Camera
+CameraStates	[#ShowHideRoots, #BackwardsView]
+
+//Audio
+Sound	TRUE
+
+//Pickups
+NitroDuration	7500
+NitroBoost	45
+CashBig	5000
+CashSmall	1000
+StatusDuration	2500
+
+//Upgrades 
+//engine: [kmh, acceleration gain, deceleration gain])
+//handling: []
+HealthUpgrade	50
+EngineUpgrade	[2, .001, .006]
+HandlingUpgrade	[]
+
+//Visual options
+Lightmaps	TRUE
+Effects	#high
+
+// Misc (FPS, Car, Checkpoint, Waypoint)
+LockEscape	TRUE
+FpsCounter	FALSE
+CarHelpers	FALSE
+CPHelpers	FALSE
+WPHelpers	FALSE
+InvWalls	TRUE
+Obstacles	TRUE
+Pickups	TRUE
+Traffic	TRUE
+VisibleTiles	100
+GodOfWarBullets	10000

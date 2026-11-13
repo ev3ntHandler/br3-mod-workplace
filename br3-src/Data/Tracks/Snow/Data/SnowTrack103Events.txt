@@ -1,0 +1,39 @@
+-- [Text] SnowTrack103Events
+
+SnowTrack103Data_Begin			
+	Name	New track	
+	GameMode	Race	
+	TargetTime	10000	
+	Fog	TRUE	
+	FogColor	[230,235,240]	
+	FogRange	[25,600]	
+	Skybox	SnowTwilight	
+	PlayerCar	[#car: "Player", #position: vector(-15.6935,-62.3389,1.58618), #orientation: [0.06,-0.00,-0.01,1.00]]	
+	AICar	[#car: "Eclipse", #position: vector(-20.8518,-49.9161,3.29399), #orientation: [0.08,-0.00,-0.01,1.00]]	
+	AICar	[#car: "Corvette", #position: vector(-7.63989,-45.5773,4.13413), #orientation: [0.07,-0.00,-0.01,1.00]]	
+	AICar	[#car: "Eclipse", #position: vector(-8.20331,-58.2498,2.24762), #orientation: [0.07,-0.00,-0.01,1.00]]	
+SnowTrack103Data_End			
+			
+SnowTrack103Build_Begin			
+	CreateTile	SnowAssets	[#type: "SnowCurves1", #aipath: ["SnowCurves1"], #direction: "SouthNorth", #position: vector(0.0,0.0,0.0)]
+	CreateTile	SnowAssets	[#type: "SnowCurve4", #aipath: ["SnowCurve4"], #direction: "SouthEast", #position: vector(20.1698,250.02,30.0002), #Nitro_PickUp: [[vector (140.015,249.918,36.3951), [-0.28,0.16,-0.05,0.95] ]]]
+	CreateTile	SnowAssets	[#type: "SnowHorizontal", #aipath: ["SnowHorizontal"], #direction: "WestEast", #position: vector(270.17,250.007,50.0004)]
+	CreateTile	SnowAssets	[#type: "SnowCurve2", #aipath: ["SnowCurve2"], #direction: "WestNorth", #position: vector(520.17,250.022,70.0007)]
+	CreateTile	SnowAssets	[#type: "SnowTown1", #aipath: ["SnowTown1"], #direction: "SouthEast", #position: vector(580.216,500.022,75.0005), #Nitro_PickUp: [[vector (688.004,579.274,76.5005), [-0.28,0.16,-0.05,0.95] ]]]
+	CreateTile	SnowAssets	[#type: "SnowCurve1", #aipath: ["SnowCurve1"], #direction: "WestSouth", #position: vector(830.149,580.023,80.0008)]
+	CreateTile	SnowAssets	[#type: "SnowCurves1", #aipath: ["SnowCurves1"], #direction: "NorthSouth", #position: vector(809.979,330.005,60.0007)]
+	CreateTile	SnowAssets	[#type: "SnowUnique1", #aipath: ["SnowUnique1"], #direction: "NorthEast", #position: vector(770.198,79.9821,50.0), #ArrowsLeft_Object: [[vector (797.922,150.78,60.0004), [0.00,1.00,0.00,0.00] ]]]
+	CreateTile	SnowAssets	[#type: "SnowTunnelCurveOut2", #aipath: ["SnowTunnelCurveOut2"], #direction: "WestEast", #position: vector(1005.15,159.992,59.981), #ArrowsRight_Object: [[vector (948.168,176.901,59.9812), [0.00,-0.13,0.00,0.99] ]]]
+	CreateTile	SnowAssets	[#type: "SnowTunnelHorizontal", #aipath: ["SnowTunnelHorizontal"], #direction: "WestEast", #position: vector(1255.15,159.992,69.9815), #Nitro_PickUp: [[vector (1246.99,160.033,69.235), [-0.28,0.16,-0.05,0.95] ]]]
+	CreateTile	SnowAssets	[#type: "SnowTunnelCurveIn1", #aipath: ["SnowTunnelCurveIn1"], #direction: "WestSouth", #position: vector(1505.15,159.992,64.982)]
+	CreateTile	SnowAssets	[#type: "SnowTunnelEntrance", #aipath: ["SnowTunnelEntrance"], #direction: "NorthSouth", #position: vector(1505.15,-90.0082,64.9757)]
+	CreateTile	SnowAssets	[#type: "SnowUnique2", #aipath: ["SnowUnique2"], #direction: "NorthSouth", #position: vector(1465.15,-339.895,64.9816)]
+	CreateTile	SnowAssets	[#type: "SnowRockyExit", #aipath: ["SnowRockyExit"], #direction: "NorthSouth", #position: vector(1485.14,-589.895,64.9814)]
+	CreateTile	SnowAssets	[#type: "SnowCurve2", #aipath: ["SnowCurve2"], #direction: "NorthWest", #position: vector(1485.15,-839.895,59.9816)]
+	CreateTile	SnowAssets	[#type: "SnowHorizontal", #aipath: ["SnowHorizontal"], #direction: "EastWest", #position: vector(1235.15,-839.91,39.9814)]
+	CreateTile	SnowAssets	[#type: "SnowTown1", #aipath: ["SnowTown1"], #direction: "EastSouth", #position: vector(985.219,-919.899,24.981)]
+	CreateTile	SnowAssets	[#type: "SnowTunnelExit", #aipath: ["SnowTunnelExit"], #direction: "NorthSouth", #position: vector(925.173,-1169.9,24.9807)]
+	CreateTile	SnowAssets	[#type: "SnowTunnelEntrance", #aipath: ["SnowTunnelEntrance"], #direction: "NorthSouth", #position: vector(925.172,-1419.9,24.9741)]
+	CreateTile	SnowAssets	[#type: "SnowCastle", #aipath: ["SnowCastle"], #direction: "NorthSouth", #position: vector(905.003,-1669.92,10.2334)]
+	CreateTile	SnowAssets	[#deco: TRUE, #parent: 20, #type: "SnowMountainExit", #aipath: ["SnowMountainExit"], #direction: "NorthSouth", #position: vector(945.681,-1919.95,15.3399)]
+SnowTrack103Build_End			

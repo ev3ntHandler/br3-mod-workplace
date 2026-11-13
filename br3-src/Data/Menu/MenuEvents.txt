@@ -1,0 +1,1264 @@
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// MENU INITIALIZATION
+//-------------------------------------------------------------------------------------------------------------------------------------------
+MenuInitialization_Begin	
+	// Builds & setups all basic stuff in the main member, all other subscene are only visual gimmicks, displayed behind the menu
+	ResetSprites		[#start: 1, #end: 5]
+	Evaluate	{:MenuInit} = FALSE	[#event: "SetupMenu"]
+	SetVisible	Main	[#model: ["Menu", "Interface", "DownloadingTag"], #state: FALSE]	
+	SetVisible	Main	[#model: ["Blackbars"], #state: TRUE]
+	CreateSprite	Main	[#channel: 1, #size: {:Resolution}, #loc: point({:Resolution}[1]/2, {:Resolution}[2]/2), #manager: TRUE]
+	AddValue		[#name: "Sprite", #value: 1]	
+	ActivateCamera	{:Sprite}	[#camera: "3D_Camera"]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "2D_Camera"]
+	SetCamera	Main	[#cameraName: "3D_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]), #clearAtRender: FALSE]
+	SetCamera	Main	[#cameraName: "2D_Camera", #projection: #orthographic, #orthoHeight: 480.0,  #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]), #clearAtRender: FALSE]
+	AddValue		[#name: "Member", #value: member("Main")]
+	// dubbelop helaas...
+	CreateTextTexture	Main	[#text: gData.data.text.backButton, #texture: "BackButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.backButton, #texture: "BackButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	Do		SetExitLock
+	puppetTempo	60
+	PlaySound	BR3Adrenaline_Music	[#loopCount: 0]
+	Event		{:SubScene}Initialization
+	SetAntiAliasing	{:Sprite}	[#mode: #{:AntiAliasing}]
+MenuInitialization_End
+
+SetupMenu_Begin
+	// Hide stuff
+	ResetWorld	Main
+	RemoveLod	Main
+	// script
+	AddScript	Main	[#script: "[PS] Burnin3 Menu", #system: TRUE, #data: [#member: "Main", #camera: ["3D_Camera", "2D_Camera"]]]
+	// create basic textures & buttons (Back & Next), because these will be used throught the entire menu
+	CreateTextTexture	Main	[#text: gData.data.text.backButton, #texture: "BackButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.backButton, #texture: "BackButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "BackButton_Material", #texture1: "BackButtonNormal_Texture"]
+	CreateButton	Main	[#model: "BackButton", #event: "", #rollover: "BackButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "NextButton_Material", #texture1: "NextButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "NextButton", #event: "", #rollover: "NextButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+	Evaluate	{:Font3DInit} = FALSE	[#event: "SetupFont3D"]
+	SetValue		[#MenuInit: TRUE]
+SetupMenu_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Sub menus
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Logo_Begin
+	SetValue		[#scene: "Menu"]
+	Event		Hide{:CurrentMenu}
+	SetValue		[#subscene: "Logo"]
+	Event		{:SubScene}Initialization	
+Logo_End
+
+Main_Begin
+	SetValue		[#scene: "Menu"]
+	Event		Hide{:CurrentMenu}
+	SetValue		[#subscene: "Main"]
+	Event		{:SubScene}Initialization
+Main_End
+
+TrackSelection_Begin
+	SetValue		[#scene: "Menu"]
+	Event		Hide{:CurrentMenu}
+	SetValue		[#subscene: "TrackSelection"]
+	Event		{:SubScene}Initialization
+TrackSelection_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Car Selection inc. hold for download
+CarSelection_Begin
+	SetValue		[#scene: "Menu"]
+	Evaluate	{:local}=FALSE	[#event: "CheckCarsDownloaded"]
+	Evaluate	{:local}=TRUE	[#event: "ContinueCarSelection"]
+CarSelection_End
+
+ContinueCarSelection_Begin
+	SetValue	gGame.menu	[#menu: 0]
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "Loading_Camera"]
+	RemoveFromHandlerList	"UpdateCarsLoadPercentage"
+	Event		Hide{:CurrentMenu}
+	SetValue		[#subscene: "CarSelection"]
+	Event		{:SubScene}Initialization
+ContinueCarSelection_End
+
+CheckCarsDownloaded_Begin
+	Evaluate	{:CarsDownloaded}=FALSE	[#event: "HoldForCarsDownload"]
+	Evaluate	{:CarsDownloaded}=TRUE	[#event: "ContinueCarSelection"]
+CheckCarsDownloaded_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Track Initialization
+TrackInitialization_Begin
+	Evaluate	{:local}=FALSE	[#event: "CheckTrackDownloaded"]
+	Evaluate	{:local}=TRUE	[#event: "ContinueTrackInitialization"]
+TrackInitialization_End
+
+CheckTrackDownloaded_Begin
+	Evaluate	{:TrackDownloaded}=FALSE	[#event: "HoldForTrackDownload"]
+	Evaluate	{:TrackDownloaded}=TRUE	[#event: "ContinueTrackInitialization"]
+CheckTrackDownloaded_End
+
+ContinueTrackInitialization_Begin
+	SetValue	gGame.menu	[#menu: 0]
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "Loading_Camera"]
+	RemoveFromHandlerList	"UpdateTrackLoadPercentage"
+	Event		TracksInitialization
+ContinueTrackInitialization_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// LOGO
+//-------------------------------------------------------------------------------------------------------------------------------------------
+LogoInitialization_Begin
+	// evaluate the init
+	Evaluate	{:LogoInit} = FALSE	[#event: "SetupLogo"]
+	// Setup logo to sprite
+	AddCameraToSprite	{:Sprite}	[#member: "Logo", #camera: "DefaultView", #index: 1]
+	SetCamera	Logo	[#cameraName: "DefaultView", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]
+	CreateSprite	Logo	[#channel: 2, #size: [1,1], #loc: point(0,0)]
+	AddToMimic	Logo	[#object: "DefaultView", #target: "Logo_Camera"]
+	AddScript	Logo	[#script: "[PS] Bloom", #system: TRUE, #data: [#targetCameraName: "DefaultView", #size: 0.125, #template: #Logo]]
+	// StartButton
+	CreateTextTexture	Main	[#text: gData.data.text.startButton, #texture: "StartButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.startButton, #texture: "StartButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #align: #center, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "StartButton_Material", #texture1: "StartButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "StartButton", #event: "Main", #rollover: "StartButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// Default texture: Footer
+	CreateTextTexture	Main	[#text: gData.data.text.footer, #texture: "Footer_Texture", #fontSize: 10, #width: 512, #align: #center, #color: gData.data.textColor.white]
+	AssignTexture	Main	[#material: "Footer_Material", #texture1: "Footer_Texture"]	
+	// Show 3d textbuttons
+	SetVisible	Main	[#model: ["BackButton", "NextButton"], #state: FALSE]
+	PlaySound	Flames_SFX
+	DelayEvent		[#delay: 500, #event:"PlayLogo"]		
+LogoInitialization_End
+
+PlayLogo_Begin
+	Do		PlayAllAnimation
+	DelayEvent		[#delay: 2500, #event: "ShowStartButton"]
+PlayLogo_End
+
+ShowStartButton_Begin
+	SetVisible	Main	[#model: "Logo", #state: TRUE]
+ShowStartButton_End
+
+SetupLogo_Begin
+	PutMessage	Setup logo
+	CreateTexture	Logo	[#filename: "BR3Logo_Texture", #filtering: #lowfiltered]
+	CreateTexture	Logo	[#filename: "Flames2_Texture", #filtering: #lowfiltered, #renderFormat: #rgba8880]
+	SetCamera	Logo	[#cameraName: "Logo_Camera", #fov: 62.0]
+	AddToMimic	Logo	[#object: "Omni02", #target: "3"]
+	SetLight	Logo	[#name: "Omni02", #color: rgb(255, 255, 255)]
+	SetValue		[#LogoInit: TRUE]
+	Do		ResetAllAnimation	
+SetupLogo_End
+
+HideLogo_Begin
+	PutMessage	Hide logo
+	ResetSprites		[#start: 2, #end: 5]
+	RemoveCameraFromSprite	{:Sprite}	[#index: 1]
+	DeleteButton	Main	[#model: "StartButton", #hide: TRUE]
+	SetVisible	Main	[#model: "Footer", #state: FALSE]
+	SetValue	gSystem	[#MimicList: [:]]
+	SetValue		[#AddShaders: []]
+	SetValue		[#scriptList: []]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	ResetWorld	Logo
+HideLogo_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Main
+//-------------------------------------------------------------------------------------------------------------------------------------------
+MainInitialization_Begin
+	CreateSprite	Car	[#channel: 2, #size: [1,1], #loc: point(0,0)]	
+	// evaluate the init
+	Evaluate	{:MainInit} = FALSE	[#event: "SetupMain"]
+	AddCameraToSprite	{:Sprite}	[#member: "Car", #camera: "DefaultView", #index: 1]
+	SetCamera	Car	[#cameraName: "DefaultView", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Main3D_Camera", #percentage: {:MenuIntSpeed}]
+	AddToMimic	Car	[#object: "DefaultView", #target: "Car_Camera"]
+	AddScript	Car	[#script: "[PS] Bloom", #system: TRUE, #data: [#targetCameraName: "DefaultView", #size: 0.125, #template: #Car]]
+	// Evaluate save status
+	Evaluate	{:GameSaved} = TRUE;{:MainCInit} = FALSE	[#event: "MainContinueButton"]
+	// Show 3d textbuttons
+	SetVisible	Main	[#group: "MainMenu", #state: TRUE]
+	SetVisible	Main	[#model: ["BackButton", "NextButton"], #state: FALSE]
+	Evaluate	{:GameSaved} = FALSE	[#event: "AnimateMainIn"]			
+	Evaluate	{:GameSaved} = TRUE	[#event: "AnimateMainIn2"]
+	// set currentMenu
+	SetValue		[#currentMenu: "Main"]
+	BindKey		[#key: "1", #event: "HideUI", #once: FALSE]
+MainInitialization_End
+
+HideUI_Begin
+	SetVisible	Main	[#group: ["MainMenu", "MainMenuDomination", "MainMenuStats", "MainMenuOptions", "MainMenuHelp"], #state: FALSE]
+HideUI_End
+
+SetupMain_Begin
+	PutMessage	Setup main
+	// 3d text with group
+	CreateObject	Main	[#name: "MainMenu", #type: #group]
+	CreateObject	Main	[#name: "MainMenuButtons", #type: #group]
+	SetPosDir	Main	[#object: "MainMenu", #position: vector(0, 0, -80)]
+	SetParent	Main	[#group: "MainMenuButtons", #parent: "MainMenu"]	
+	Create3DText	Main	[#text: "main menu", #Size: 100, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "MainMenu", #parent: "MainMenu", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 1, 0)]
+	Create3DText	Main	[#text: "continue domination", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "main menu", #lineSpacing: 20, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .05, 0)]
+	Create3DText	Main	[#text: "new domination", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "continue domination", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .1, 0)]
+	Create3DText	Main	[#text: "daily challenge", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "new domination", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .2, 0)]
+	Create3DText	Main	[#text: "stats & trophies", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "daily challenge", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .3, 0)]
+	Create3DText	Main	[#text: "options", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "stats & trophies", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .4, 0)]
+	Create3DText	Main	[#text: "help", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "options", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .5, 0)]
+	Create3DText	Main	[#text: "quit", #Size: 50, #alignH: #left, #alignV: #top, #alignVRef: "help", #lineSpacing: 10, #parent: "MainMenuButtons", #shader: "DarkFont3D_Material", #glow: TRUE, #glowShader: "DarkFont3DGlow_Material", #offset: vector(0, .6, 0)]
+	CreateTextButton	Main	[#text: "continue domination", #event: "ContinueDomination", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "new domination", #event: "NewDomination", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "daily challenge", #event: "CheckDailyChallenge", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "stats & trophies", #event: "StatsAndTrophies", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "options", #event: "Options", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "help", #event: "Help", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	CreateTextButton	Main	[#text: "quit", #event: "Quit", #rollover: ["YellowFont3D_Material", "YellowFont3DGlow_Material"], #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX", #effect: #offset]
+	SetPosDir	Main	[#object: "MainMenuButtons", #position: vector(0,0,40)]
+	SetVisible	Main	[#group: "continue domination", #state: FALSE]
+	CreateTexture	Hangar	[#filename: "DefaultShadow_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "DefaultReflection_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "Hangar_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "HangarLightmap_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "HangarTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	Hangar	[#filename: "HangarAdd_Texture", #renderFormat: #rgba8888]
+	AssignTexture	Hangar	[#material: "Hangar_Material", #lightmap: "HangarLightmap_Texture"]
+	CreateTexture	Car	[#filename: "Car_Texture"]
+	CreateTexture	Car	[#filename: "MenuCarGun_Texture"]
+	CreateTexture	Car	[#filename: "MenuCarWheels_Texture"]
+	CreateTexture	Car	[#filename: "CarRefl_Texture", #renderFormat: #rgba8880]
+	CreateTexture	Car	[#filename: "MenuCarEffects_Texture", #renderFormat: #rgba8880]
+	BlendShader	Car	[#materialName: "Effects_Material", #blendMode: #add]
+	AssignTexture	Car	[#material: "Car_Material", #texture2: "CarRefl_Texture"]
+	AssignTexture	Car	[#material: "Car_Material", #texture3: "CarRefl_Texture"]
+	AssignTexture	Car	[#material: "Car_Material", #texture4: "CarRefl_Texture"]
+	SetMaterial	Car	[#materialName: "Car_Material", #blendFunction1: #blend, #blendConstant1: 15, #useDiffuseWithTexture: TRUE, #textureMode2: #reflection, #blendFunction2: #add, #textureMode3: #reflection, #blendFunction3: #add, #textureMode4: #reflection, #blendFunction4: #add]	
+	AssignTexture	Car	[#material: "MenuCarGun_Material", #texture2: "CarRefl_Texture"]
+	SetMaterial	Car	[#materialName: "MenuCarGun_Material", #blendFunction1: #multiply, #textureMode2: #reflection, #blendFunction2: #add]
+	Do		CarSpecial
+	SetValue		[#MainInit: TRUE]
+SetupMain_End
+
+HideMain_Begin
+	PutMessage	Hide main
+	//Event		AnimateMainOut
+	ResetSprites		[#start: 2, #end: 5]
+	RemoveCameraFromSprite	{:Sprite}	[#index: 1]
+	SetVisible	Main	[#group: ["MainMenu", "MainMenuDomination", "MainMenuStats", "MainMenuOptions", "MainMenuHelp"], #state: FALSE]	
+	SetValue	gGame	[#scriptList: []]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+HideMain_End
+
+MainContinueButton_Begin
+	SetPosDir	Main	[#object: "MainMenuButtons", #position: vector(0,0,0)]
+	SetVisible	Main	[#group: "continue domination", #state: TRUE]
+	SetValue		[#MainCInit: TRUE]
+MainContinueButton_End
+
+AnimateMainIn_Begin
+	SetPosDir	Main	[#object: "main menu", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "new domination", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "daily challenge", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "stats & trophies", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "options", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "help", #PositionOffSet: vector(-1200,0,0)]	
+	SetPosDir	Main	[#object: "quit", #PositionOffSet: vector(-1200,0,0)]	
+	DelayCommand		[#delay: 200, #command: "AddToInterpolator", #target: "Main", #data: [#object: "main menu", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 300, #command: "AddToInterpolator", #target: "Main", #data: [#object: "new domination", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 400, #command: "AddToInterpolator", #target: "Main", #data: [#object: "daily challenge", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 500, #command: "AddToInterpolator", #target: "Main", #data: [#object: "stats & trophies", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 600, #command: "AddToInterpolator", #target: "Main", #data: [#object: "options", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 700, #command: "AddToInterpolator", #target: "Main", #data: [#object: "help", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 800, #command: "AddToInterpolator", #target: "Main", #data: [#object: "quit", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+AnimateMainIn_End
+
+AnimateMainIn2_Begin
+	SetPosDir	Main	[#object: "main menu", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "continue domination", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "new domination", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "daily challenge", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "stats & trophies", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "options", #PositionOffSet: vector(-1200,0,0)]
+	SetPosDir	Main	[#object: "help", #PositionOffSet: vector(-1200,0,0)]	
+	SetPosDir	Main	[#object: "quit", #PositionOffSet: vector(-1200,0,0)]	
+	DelayCommand		[#delay: 200, #command: "AddToInterpolator", #target: "Main", #data: [#object: "main menu", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 300, #command: "AddToInterpolator", #target: "Main", #data: [#object: "continue domination", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 400, #command: "AddToInterpolator", #target: "Main", #data: [#object: "new domination", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 500, #command: "AddToInterpolator", #target: "Main", #data: [#object: "daily challenge", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 600, #command: "AddToInterpolator", #target: "Main", #data: [#object: "stats & trophies", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 700, #command: "AddToInterpolator", #target: "Main", #data: [#object: "options", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 800, #command: "AddToInterpolator", #target: "Main", #data: [#object: "help", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+	DelayCommand		[#delay: 900, #command: "AddToInterpolator", #target: "Main", #data: [#object: "quit", #offSetX: 1200, #percentage: {:MenuIntSpeed}]]
+AnimateMainIn2_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// New Domination
+//-------------------------------------------------------------------------------------------------------------------------------------------
+NewDomination_Begin
+	// evaluate the init
+	Evaluate	{:DomInit} = FALSE	[#event: "SetupNewDomination"]
+	SetVisible	Main	[#group: "MainMenu", #state: FALSE]
+	SetVisible	Main	[#group: "MainMenuDomination", #state: TRUE]
+	SetVisible	Main	[#model: ["NewDomination", "BackButton"], #state: TRUE]
+	SetVisible	Main	[#model: "EnterNameWarning", #state: FALSE]
+	Evaluate	{:GameSaved} = TRUE	[#event: "ShowDominationWarning"]
+	SetButton	Main	[#model: "BackButton", #event: "HideNewDomination"]
+	SetButton	Main	[#model: "NextButton", #event: "Intro"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "NewDomination_Camera", #percentage: {:MenuIntSpeed}]
+	CreateTextTexture	Main	[#text: gData.data.text.warning, #texture: "Warning_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	// Add script to enter name
+	AddScript	Main	[#script: "[PS] Burnin3 Enter Name", #data: [:]]
+NewDomination_End
+
+SetupNewDomination_Begin
+	CreateObject	Main	[#name: "MainMenuDomination", #type: #group]
+	Create3DText	Main	[#text: "World ", #Size: 102, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "EnterName", #parent: "MainMenuDomination", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material"]
+	Create3DText	Main	[#text: "Domination ", #Size: 60, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "EnterName", #parent: "MainMenuDomination", #lineSpacing: 75, #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material"]
+	CreateTextTexture	Main	[#text: gData.data.text.playerName, #texture: "PlayerName_Texture", #align: #center, #fontSize: 26, #lineSpacing: 18, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "PlayerName_Material", #texture1: "PlayerName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.warning, #texture: "Warning_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "Warning_Material", #texture1: "Warning_Texture"]	
+	SetPosDir	Main	[#object: "MainMenuDomination", #position: vector(0,0,125)]
+	SetValue		[#DomInit: TRUE]
+SetupNewDomination_End
+
+HideNewDomination_Begin
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Main3D_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#group: "MainMenu", #state: TRUE]
+	Evaluate	{:GameSaved} = FALSE	[#event: "AnimateMainIn"]			
+	Evaluate	{:GameSaved} = TRUE	[#event: "AnimateMainIn2"]
+	SetVisible	Main	[#group: "MainMenuDomination", #state: FALSE]
+	SetVisible	Main	[#model: ["NewDomination", "BackButton", "NextButton"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: ""]
+	SetButton	Main	[#model: "NextButton", #event: ""]
+	// Remove script to enter name	
+	SetValue	gGame	[#scriptList: []]
+	RemoveValue		[#name: "EnterName"]
+HideNewDomination_End
+
+ShowDominationWarning_Begin
+	CreateTextTexture	Main	[#text: gData.data.text.warning, #texture: "Warning_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	SetVisible	Main	[#model: "EnterNameWarning", #parent: "EnterName", #state: TRUE]
+ShowDominationWarning_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Intro (no init, only delete!)
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Intro_Begin
+	SetVisible	Main	[#model: "NewDomination", #state: FALSE]
+	//Do		SetupDefaultData
+	//Evaluate	{:Cheat}=FALSE	[#handler: "SetupDefaultData"]
+	//Do		SaveData
+	Event		TrackSelection
+Intro_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Continue Domination is directly to Track selection
+//-------------------------------------------------------------------------------------------------------------------------------------------
+ContinueDomination_Begin
+	Do		RestoreData
+	Event		TrackSelection
+ContinueDomination_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Daily challenge
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CheckDailyChallenge_Begin
+	Evaluate	{:GameSaved}=TRUE	[#event: "DailyChallenge"]
+	Evaluate	{:GameSaved}=FALSE	[#event: "ShowDailyChallengeDialog"]
+CheckDailyChallenge_End
+
+DailyChallenge_Begin
+	Do		RestoreData
+	SetValue		[#DailyChallenge: TRUE]
+	Event		TrackSelection
+DailyChallenge_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Stats & Trophies (inc. init)
+//-------------------------------------------------------------------------------------------------------------------------------------------
+StatsAndTrophies_Begin
+	// evaluate the init
+	Evaluate	{:StatsInit} = FALSE	[#event: "SetupStatsAndTrophies"]
+	SetVisible	Main	[#group: "MainMenu", #state: FALSE]
+	SetVisible	Main	[#group: "MainMenuStats", #state: TRUE]
+	SetVisible	Main	[#model: ["StatsAndTrophies", "BackButton"], #state: TRUE]
+	Event		ShowStats
+	SetButton	Main	[#model: "BackButton", #event: "HideStatsAndTrophies"]
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Frontal3D_Camera", #rotation: "Frontal3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Stats_Camera", #percentage: {:MenuIntSpeed}]		
+StatsAndTrophies_End
+
+SetupStatsAndTrophies_Begin
+	CreateObject	Main	[#name: "MainMenuStats", #type: #group]
+	CreateObject	Main	[#name: "MainMenuTrophies", #type: #group]
+	Create3DText	Main	[#text: "statistics>", #Size: 69, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "StatisticsText", #parent: "MainMenuStats", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)]
+	Create3DText	Main	[#text: "<trophies", #Size: 81, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "TrophiesText", #parent: "MainMenuTrophies", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)]
+	CreateTexture	Main	[#filename: "Statistics_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]	
+	CreateTexture	Main	[#filename: "Trophies_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]		
+	SetPosDir	Main	[#object: "MainMenuStats", #position: vector(29,0,55)]
+	SetPosDir	Main	[#object: "MainMenuTrophies", #position: vector(0,0,65)]
+	CreateButton	Main	[#model: "statistics>_>11", #event: "ShowTrophies", #shader: TRUE, #rolloverShader: "YellowFont3D_Material", #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateButton	Main	[#model: "<trophies_<1", #event: "ShowStats", #shader: TRUE, #rolloverShader: "YellowFont3D_Material", #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+	SetValue		[#StatsInit: TRUE]	
+SetupStatsAndTrophies_End
+
+HideStatsAndTrophies_Begin
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Main3D_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#group: "MainMenu", #state: TRUE]
+	SetVisible	Main	[#group: ["MainMenuStats", "MainMenuTrophies"], #state: FALSE]
+	SetVisible	Main	[#model: ["StatsAndTrophies", "Statistics", "Trophies", "BackButton"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: ""]
+	// remove scripts
+	SetValue	gGame	[#ScriptList: []]
+HideStatsAndTrophies_End
+
+ShowStats_Begin
+	Do		UpdateGameStatistics
+	SetVisible	Main	[#group: "MainMenuTrophies", #state: FALSE]
+	SetVisible	Main	[#model: "Trophies", #state: FALSE]
+	SetVisible	Main	[#group: "MainMenuStats", #state: TRUE]
+	SetVisible	Main	[#model: "Statistics", #state: TRUE]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Stats_Camera", #percentage: {:MenuIntSpeed}]
+	// Add script to scroll help
+	SetValue	gGame	[#ScriptList: []]
+	AddScript	Main	[#script: "[PS] Burnin3 Scroller", #data: [#tag: "Statistics"]]	
+ShowStats_End
+
+ShowTrophies_Begin
+	Do		UpdateTrophies
+	SetVisible	Main	[#group: "MainMenuTrophies", #state: TRUE]
+	SetVisible	Main	[#model: "Trophies", #state: TRUE]
+	SetVisible	Main	[#group: "MainMenuStats", #state: FALSE]
+	SetVisible	Main	[#model: "Statistics", #state: FALSE]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Trophies_Camera", #percentage: {:MenuIntSpeed}]
+	// Add script to scroll help
+	SetValue	gGame	[#ScriptList: []]
+	AddScript	Main	[#script: "[PS] Burnin3 Scroller", #data: [#tag: "Trophies"]]	
+ShowTrophies_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Options (inc. init)
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Options_Begin
+	// evaluate the init
+	Evaluate	{:OptionsInit} = FALSE	[#event: "SetupOptions"]
+	SetVisible	Main	[#group: "MainMenu", #state: FALSE]
+	SetVisible	Main	[#group: "MainMenuOptions", #state: TRUE]
+	SetVisible	Main	[#model: ["OptionsMenu", "BackButton"], #state: TRUE]
+	SetButton	Main	[#model: "BackButton", #event: "HideOptions"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Options_Camera", #percentage: {:MenuIntSpeed}]
+	// set states
+	Event		CheckSound
+	Event		CheckLightmaps
+	Event		CheckBloom
+	Event		CheckEffects
+Options_End
+
+SetupOptions_Begin
+	CreateObject	Main	[#name: "MainMenuOptions", #type: #group]
+	Create3DText	Main	[#text: "Options ", #Size: 105, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "HelpText", #parent: "MainMenuOptions", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)]
+	// On/Off
+	CreateTextTexture	Main	[#text: gData.data.text.OnButton, #texture: "OnButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.grey, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.OnButton, #texture: "OnButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.orange, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.OnButton, #texture: "OnButtonActive_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.OffButton, #texture: "OffButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.grey, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.OffButton, #texture: "OffButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.orange, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.OffButton, #texture: "OffButtonActive_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #width: 64, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.HighButton, #texture: "HighButtonNormal_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.grey, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.HighButton, #texture: "HighButtonRollover_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.orange, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.HighButton, #texture: "HighButtonActive_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.white, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.LowButton, #texture: "LowButtonNormal_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.grey, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.LowButton, #texture: "LowButtonRollover_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.orange, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.LowButton, #texture: "LowButtonActive_Texture", #fontSize: 26, #align: #right, #lineSpacing: 18, #color: gData.data.textColor.white, #width: 128, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	// Audio Settings
+	CreateTextTexture	Main	[#text: "AUDIO SETTINGS", #texture: "AudioSettings_Texture", #fontSize: 26, #lineSpacing: 18, #width: 512, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "AudioSettings_Material", #texture1: "AudioSettings_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.audioSettingsText, #texture: "AudioOptionsText_Texture", #fontSize: 14, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "AudioOptionsText_Material", #texture1: "AudioOptionsText_Texture"]	
+	// Sound	
+	CreateTextTexture	Main	[#text: "SOUND", #texture: "OptionSound_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OptionSound_Material", #texture1: "OptionSound_Texture"]	
+	// Visual Settings
+	CreateTextTexture	Main	[#text: "VIDEO SETTINGS", #texture: "VisualOptions_Texture", #fontSize: 26, #lineSpacing: 18, #width: 512, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "VisualOptions_Material", #texture1: "VisualOptions_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.visualSettingsText, #texture: "VisualOptionsText_Texture", #fontSize: 14, #width: 512, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "VisualOptionsText_Material", #texture1: "VisualOptionsText_Texture"]
+	// Lightmaps	
+	CreateTextTexture	Main	[#text: "LIGHTMAPS", #texture: "OptionLightmaps_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OptionLightmaps_Material", #texture1: "OptionLightmaps_Texture"]	
+	// bloom	
+	CreateTextTexture	Main	[#text: "BLOOM", #texture: "OptionBloom_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OptionBloom_Material", #texture1: "OptionBloom_Texture"]	
+	// Effects	
+	CreateTextTexture	Main	[#text: "EFFECTS", #texture: "OptionEffects_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OptionEffects_Material", #texture1: "OptionEffects_Texture"]	
+	// other
+	SetModel	Main	[#model: "OptionsBlack", #visibility: #front_nodepth]	
+	SetPosDir	Main	[#object: "MainMenuOptions", #position: vector(0,0,70)]
+	SetValue		[#OptionsInit: TRUE]
+SetupOptions_End
+
+HideOptions_Begin
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Main3d_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#group: "MainMenu", #state: TRUE]
+	SetVisible	Main	[#group: "MainMenuOptions", #state: FALSE]
+	SetVisible	Main	[#model: ["OptionsMenu", "BackButton"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: ""]
+HideOptions_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// OPTIONS AND STUFF
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// sound
+CheckSound_Begin
+	Evaluate	gSound.mute=FALSE	[#Event: "SoundOn"]
+	Evaluate	gSound.mute=TRUE	[#Event: "SoundOff"]
+CheckSound_ENd
+
+SoundOn_Begin
+	AssignTexture	Main	[#material: "OptionSoundOn_Material", #texture1: "OnButtonActive_Texture"]	
+	DeleteButton	Main	[#model: "OptionSoundOn"]
+	AssignTexture	Main	[#material: "OptionSoundOff_Material", #texture1: "OffButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionSoundOff", #event: "ToggleSoundOff", #rollover: "OffButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+SoundOn_End
+
+SoundOff_Begin
+	AssignTexture	Main	[#material: "OptionSoundOff_Material", #texture1: "OffButtonActive_Texture"]
+	DeleteButton	Main	[#model: "OptionSoundOff"]	
+	AssignTexture	Main	[#material: "OptionSoundOn_Material", #texture1: "OnButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionSoundOn", #event: "ToggleSoundOn", #rollover: "OnButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+SoundOff_End
+
+ToggleSoundOff_Begin
+	Do		MuteGame
+	Event		CheckSound	
+ToggleSoundOff_End
+
+ToggleSoundOn_Begin
+	Do		MuteGame
+	Event		CheckSound	
+ToggleSoundOn_End
+
+// lightmaps
+CheckLightmaps_Begin
+	Evaluate	{:Lightmaps}=TRUE	[#Event: "LightmapsOn"]
+	Evaluate	{:Lightmaps}=FALSE	[#Event: "LightmapsOff"]
+CheckLightmaps_ENd
+
+LightmapsOn_Begin
+	AssignTexture	Main	[#material: "OptionLightmapsOn_Material", #texture1: "OnButtonActive_Texture"]	
+	DeleteButton	Main	[#model: "OptionLightmapsOn"]
+	AssignTexture	Main	[#material: "OptionLightmapsOff_Material", #texture1: "OffButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionLightmapsOff", #event: "ToggleLightmapsOff", #rollover: "OffButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+LightmapsOn_End
+
+LightmapsOff_Begin
+	AssignTexture	Main	[#material: "OptionLightmapsOff_Material", #texture1: "OffButtonActive_Texture"]
+	DeleteButton	Main	[#model: "OptionLightmapsOff"]	
+	AssignTexture	Main	[#material: "OptionLightmapsOn_Material", #texture1: "OnButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionLightmapsOn", #event: "ToggleLightmapsOn", #rollover: "OnButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+LightmapsOff_End
+
+ToggleLightmapsOn_Begin
+	SetValue		[#Lightmaps: TRUE]
+	Event		CheckLightmaps	
+ToggleLightmapsOn_End
+
+ToggleLightmapsOff_Begin
+	SetValue		[#Lightmaps: FALSE]
+	Event		CheckLightmaps	
+ToggleLightmapsOff_End
+
+// bloom
+CheckBloom_Begin
+	Evaluate	{:Bloom}=TRUE	[#Event: "BloomOn"]
+	Evaluate	{:Bloom}=FALSE	[#Event: "BloomOff"]
+CheckBloom_End
+
+BloomOn_Begin
+	AssignTexture	Main	[#material: "OptionBloomOn_Material", #texture1: "OnButtonActive_Texture"]	
+	DeleteButton	Main	[#model: "OptionBloomOn"]
+	AssignTexture	Main	[#material: "OptionBloomOff_Material", #texture1: "OffButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionBloomOff", #event: "ToggleBloomOff", #rollover: "OffButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+BloomOn_End
+
+BloomOff_Begin
+	AssignTexture	Main	[#material: "OptionBloomOff_Material", #texture1: "OffButtonActive_Texture"]
+	DeleteButton	Main	[#model: "OptionBloomOff"]	
+	AssignTexture	Main	[#material: "OptionBloomOn_Material", #texture1: "OnButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionBloomOn", #event: "ToggleBloomOn", #rollover: "OnButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+BloomOff_End
+
+ToggleBloomOn_Begin
+	SetValue		[#Bloom: TRUE]
+	AddScript	Car	[#script: "[PS] Bloom", #system: TRUE, #data: [#targetCameraName: "DefaultView", #size: 0.125, #template: #Car]]
+	Event		CheckBloom
+ToggleBloomsOn_End
+
+ToggleBloomOff_Begin
+	SetValue		[#Bloom: FALSE]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	DeleteScript	gSystem	[#name: "StageGrabber"]
+	Event		CheckBloom
+ToggleBloomOff_End
+
+// Effects
+CheckEffects_Begin
+	Evaluate	#{:Effects}=#high	[#Event: "EffectsHigh"]
+	Evaluate	#{:Effects}=#low	[#Event: "EffectsLow"]
+CheckEffects_End
+
+EffectsHigh_Begin
+	AssignTexture	Main	[#material: "OptionEffectsHigh_Material", #texture1: "HighButtonActive_Texture"]	
+	DeleteButton	Main	[#model: "OptionEffectsHigh"]
+	AssignTexture	Main	[#material: "OptionEffectsLow_Material", #texture1: "LowButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionEffectsLow", #event: "ToggleEffectsLow", #rollover: "LowButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+EffectsHigh_End
+
+EffectsLow_Begin
+	AssignTexture	Main	[#material: "OptionEffectsLow_Material", #texture1: "LowButtonActive_Texture"]
+	DeleteButton	Main	[#model: "OptionEffectsLow"]	
+	AssignTexture	Main	[#material: "OptionEffectsHigh_Material", #texture1: "HighButtonNormal_Texture"]
+	CreateButton	Main	[#model: "OptionEffectsHigh", #event: "ToggleEffectsHigh", #rollover: "HighButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+EffectsLow_End
+
+ToggleEffectsHigh_Begin
+	SetValue		[#Effects: #high]
+	Event		CheckEffects
+ToggleBloomsOn_End
+
+ToggleEffectsLow_Begin
+	SetValue		[#Effects: #low]
+	Event		CheckEffects
+ToggleEffectsLow_End
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Help(inc. init)
+//-------------------------------------------------------------------------------------------------------------------------------------------
+Help_Begin
+	// evaluate the init
+	Evaluate	{:HelpInit} = FALSE	[#event: "SetupHelp"]
+	SetVisible	Main	[#group: "MainMenu", #state: FALSE]
+	SetVisible	Main	[#group: "MainMenuHelp", #state: TRUE]
+	SetVisible	Main	[#model: ["Helper", "BackButton"], #state: TRUE]
+	SetButton	Main	[#model: "BackButton", #event: "HideHelp"]
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Help_Camera", #rotation: "Help_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Help_Camera", #percentage: {:MenuIntSpeed}]
+	// Add script to scroll help
+	AddScript	Main	[#script: "[PS] Burnin3 Scroller", #data: [#tag: "Help", #shaderMax: 0.875]]	
+Help_End
+
+SetupHelp_Begin
+	CreateObject	Main	[#name: "MainMenuHelp", #type: #group]
+	Create3DText	Main	[#text: "help ", #Size: 100, #spacing: 5, #alignH: #left, #alignV: #top, #alignVRef: "HelpText", #parent: "MainMenuHelp", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)]
+	CreateTexture	Main	[#filename: "Help_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	SetPosDir	Main	[#object: "MainMenuHelp", #position: vector(29,0,70)]
+	SetValue		[#HelpInit: TRUE]
+SetupHelp_End
+
+HideHelp_Begin
+	//SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Main3D_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#group: "MainMenu", #state: TRUE]
+	SetVisible	Main	[#group: "MainMenuHelp", #state: FALSE]
+	SetVisible	Main	[#model: ["Helper", "BackButton"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: ""]
+	//Event		AnimateMainIn
+	// remove script to scroll help
+	SetValue	gGame	[#scriptList: []]
+HideHelp_End
+
+// QUit
+Quit_Begin
+	Do		GameQuit
+Quit_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// TRACK SELECTION
+//-------------------------------------------------------------------------------------------------------------------------------------------
+TrackSelectionInitialization_Begin
+	// evaluate the init
+	puppetTempo	60
+	Evaluate	{:TrackSelectionInit} = FALSE	[#event: "SetupTrackSelection"]
+	Evaluate	{:CashInit} = FALSE	[#event: "SetupCash"]
+	// Show earth
+	AddCameraToSprite	{:Sprite}	[#member: "Earth", #camera: "Earth_Camera", #index: 1]
+	SetCamera	Earth	[#cameraName: "Earth_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]	
+	AddScript	Earth	[#script: "[PS] Bloom", #system: TRUE, #data: [#targetCameraName: "Earth_Camera", #size: 0.125, #template: #Earth]]
+	AddToRotator	Earth	[#model: "EarthClouds", #rotation: vector(0, 0, 0.01)]
+	AddToBillboard	Earth	[#model: "EarthGlow", #camera: "Earth_Camera"]
+	AddToBillboard	Earth	[#model: "EarthInnerGlow", #camera: "Earth_Camera"]
+	// show & model & buttons	
+	SetVisible	Main	[#model: ["TrackSelection", "BackButton", "Cash"], #state: TRUE]
+	SetVisible	Main	[#model: ["ViewHighScoreButton", "Challenges", "NextButton", "BlackLayer3D"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: "Main"]
+	SetButton	Main	[#model: "NextButton", #event: "CarSelection"]
+	// continent stuff
+	Do		BuildTrackInfo
+	// tab track selection
+	Evaluate	{:DailyChallenge} = FALSE	[#event: "BuildDomination"]
+	Evaluate	{:DailyChallenge} = TRUE	[#event: "BuildDailyChallenge"]	
+	Evaluate	"{:CurrentMenu}" = "Main"	[#event: "SetupNew"]
+	Evaluate	"{:CurrentMenu}" = "CarSelection"	[#event: "SetupReturnFrom"]	
+	Evaluate	"{:Scene}" = "Tracks";"{:CurrentMenu}"<>"Hub"	[#event: "SetupReturnFrom"]	
+	Evaluate	"{:CurrentMenu}" = "Hub"	[#event: "SetupReturnFrom"]	
+	Evaluate	"{:CurrentMenu}" = "Hub"	[#event: "PreloadAgain"]	
+	Do		BuildContinentButtons
+	Do		SetContinentButtons	
+	Do		UpdateCash
+	// set currentMenu
+	SetValue		[#currentMenu: "TrackSelection"]	
+TrackSelectionInitialization_End
+
+SetupNew_Begin
+	PutMessage	NEW
+	SetValue		[#Scene: "Menu"]
+	// set value
+	Evaluate	{:DailyChallenge} = FALSE	[#event: "ClearTrackSelectionValues"]
+	// set pos dir
+	SetPosDir	Main	[#object: "3D_Camera", #position: "TrackSelection3D_Camera", #rotation: "TrackSelection3D_Camera"]
+	SetPosDir	Earth	[#object: "Earth_CameraTarget", #position: vector(0, 0,0), #rotation: vector(0,0,0)]
+	SetPosDir	Earth	[#object: "Earth_Camera", #position: "Overview_Camera", #rotation: "Overview_Camera"]
+	AddToPointAt	Earth	[#object: "Earth_Camera", #target: "Earth_CameraTarget"]
+SetupNew_End
+
+ClearTrackSelectionValues_Begin
+	SetValue		[#SelectedContinent: #none]
+	SetValue		[#SelectedLocation: #none]
+	SetValue		[#SelectedTrack: []]
+ClearTrackSelectionValues_End
+
+SetupReturnFrom_Begin
+	PutMessage	RETURN FROM CARSELECTION
+	SetValue		[#Scene: "Menu"]
+	SetPosDir	Main	[#object: "3D_Camera", #position: "TrackSelection3D_Camera", #rotation: "TrackSelection3D_Camera"]
+	SetPosDir	Earth	[#object: "Earth_CameraTarget", #position: "{:SelectedContinent}_CameraTarget", #rotation: "{:SelectedContinent}_CameraTarget"]
+	SetPosDir	Earth	[#object: "Earth_Camera", #position: "{:SelectedContinent}_Camera", #rotation:"{:SelectedContinent}_Camera"]
+	AddToPointAt	Earth	[#object: "Earth_Camera", #target: "Earth_CameraTarget"]
+	//SetVisible	Main	[#model: ["ViewHighScoreButton", "Challenges", "NextButton"], #state: TRUE]
+	SetVisible	Main	[#model: ["Challenges", "NextButton"], #state: TRUE]
+	Do		BuildLocationButtons
+	Do		SetLocationButtons
+	Do		BuildChallengeButtons
+	Do		SetChallengeButtons
+SetupReturnFrom_End
+
+PreloadAgain_Begin
+	Do		PreloadCarsAndShared
+PreloadAgain_End
+
+SetupTrackSelection_Begin
+	CreateTexture	Main	[#filename: "NewTag_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "ClearedTag_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "CompletedTag_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "LockedTag_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "TrackNormal_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "TrackRollover_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "TrackSelected_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "TrackCleared_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "BossNormal_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "BossRollover_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "BossSelected_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "BossCleared_Texture", #filtering: #lowfiltered, #nearFiltering: TRUE]
+	CreateTexture	Main	[#filename: "MenuHiddenPackage_Texture", #filtering: #lowfiltered]
+	CreateTexture	Earth	[#filename: "Earth_Texture", #filtering: #lowfiltered]
+	CreateTexture	Earth	[#filename: "EarthClouds_Texture", #filtering: #lowfiltered, #renderFormat: #rgba8888]
+	CreateTexture	Earth	[#filename: "EarthGlow_Texture", #renderFormat: #rgba8888]
+	CreateTexture	Earth	[#filename: "EarthInnerGlow_Texture", #renderFormat: #rgba8888]
+	BlendShader	Earth	[#materialName: "EarthInnerGlow_Material", #blendMode: #add]
+	// Cash
+	CreateTextTexture	Main	[#text: gData.data.text.cash, #texture: "CashTag_Texture", #fontSize: 12, #width: 64, #align: #right, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "$ {:Cash}", #texture: "Cash_Texture", #fontSize: 15, #width: 128, #align: #right, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "CashTag_Material", #texture1: "CashTag_Texture"]	
+	AssignTexture	Main	[#material: "Cash_Material", #texture1: "Cash_Texture"]	
+	// Highscore button
+	CreateTextTexture	Main	[#text: gData.data.text.ViewHighScore, #texture: "ViewHighScoreNormal_Texture", #fontSize: 15, #width: 256, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.ViewHighScore, #texture: "ViewHighScoreRollover_Texture", #fontSize: 15, #width: 256, #align: #center, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "ViewHighScore_Material", #texture1: "ViewHighScoreNormal_Texture"]	
+	CreateButton	Main	[#model: "ViewHighScoreButton", #handler: "ViewHighscore", #rollover: "ViewHighScoreRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// build textures info
+	CreateTextTexture	Main	[#text: "TRACK INFO", #texture: "TrackInfo_Texture", #fontSize: 15, #width: 512, #height: 64, #align: #left, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.PrizeMoney, #texture: "PrizeMoneyTag_Texture", #fontSize: 15, #width: 256, #height: 32, #align: #right, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "$ 000.000", #texture: "PrizeMoney_Texture", #fontSize: 30, #lineSpacing: 30, #width: 256,  #height: 64, #align: #right, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "• unlock 1", #texture: "Unlock1_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "• unlock 2", #texture: "Unlock2_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "• unlock 3", #texture: "Unlock3_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "TrackInfo_Material", #texture1: "TrackInfo_Texture"]
+	AssignTexture	Main	[#material: "PrizeMoneyTag_Material", #texture1: "PrizeMoneyTag_Texture"]
+	AssignTexture	Main	[#material: "PrizeMoney_Material", #texture1: "PrizeMoney_Texture"]
+	AssignTexture	Main	[#material: "Unlock1_Material", #texture1: "Unlock1_Texture"]
+	AssignTexture	Main	[#material: "Unlock2_Material", #texture1: "Unlock2_Texture"]
+	AssignTexture	Main	[#material: "Unlock3_Material", #texture1: "Unlock3_Texture"]
+	SetValue		[#TrackSelectionInit: TRUE]
+SetupTrackSelection_End
+
+HideTrackSelection_Begin
+	PutMessage	Hide TrackSelection
+	RemoveCameraFromSprite	{:Sprite}	[#index: 1]
+	SetVisible	Main	[#model: ["TrackSelection", "Cash", "BackButton", "NextButton"], #state: FALSE]
+	Do		DeleteLocationButtons
+	SetPosDir	Earth	[#object: "Earth_Camera", #position: "Overview_Camera", #rotation: "Overview_Camera"]
+	// remove from rotator!
+	SetButton	Main	[#model: "BackButton", #event: ""]
+	SetButton	Main	[#model: "NextButton", #event: ""]	
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+HideTrackSelection_End
+
+BuildDomination_Begin
+	// Tab textures
+	CreateTextTexture	Main	[#text: gData.data.text.TrackSelectionTabName, #texture: "TrackSelectionTabName_Texture", #align: #left, #fontSize: 19, #lineSpacing: 18, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "TrackSelectionTabName_Material", #texture1: "TrackSelectionTabName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.TrackSelectionTabInfo, #texture: "TrackSelectionTabInfo_Texture", #align: #left, #fontSize: 10, #width: 512, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "TrackSelectionTabInfo_Material", #texture1: "TrackSelectionTabInfo_Texture"]
+	SetVisible	Main	[#model: "Continents", #parent: "TrackSelection3D", #state: TRUE]
+BuildDomination_End
+
+BuildDailyChallenge_Begin
+	PutMessage	DAILY CHALLENGE
+	Do		SetupDailyChallenge
+	// Tab texture
+	CreateTextTexture	Main	[#text: gData.data.text.DailyChallengeTabName, #texture: "TrackSelectionTabName_Texture", #align: #left, #fontSize: 19, #lineSpacing: 18, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "TrackSelectionTabName_Material", #texture1: "TrackSelectionTabName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.DailyChallengeTabInfo, #texture: "TrackSelectionTabInfo_Texture", #align: #left, #fontSize: 10, #width: 512, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "TrackSelectionTabInfo_Material", #texture1: "TrackSelectionTabInfo_Texture"]
+	// show next button
+	SetVisible	Main	[#model: "Challenges", #state: TRUE]
+	SetVisible	Main	[#model: "Continents", #state: FALSE]
+	SetVisible	Main	[#model: "NextButton", #state: TRUE]
+	SetButton	Main	[#model: "NextButton", #event: "CarSelection"]		
+	SetButton	Main	[#model: "BackButton", #event: "MainFromDailyChallenge"]
+BuildDailyChallenge_End
+
+MainFromDailyChallenge_Begin
+	SetValue		[#dailyChallenge: FALSE]
+	Event		Main
+MainFromDailyChallenge_End
+
+ShowContinent_Begin	
+	SetValue		[#SelectedContinent: "{:pressedButton}"]
+	SetVisible	Main	[#model: ["Challenges", "ViewHighScoreButton", "NextButton"], #state: FALSE]
+	AddToInterpolator	Earth	[#object: "Earth_Camera", #target: "{:SelectedContinent}_Camera", #percentage: 10, #threshold: 0.4, #handler: "BuildLocationButtons"]
+	AddToInterpolator	Earth	[#object: "Earth_CameraTarget", #target: "{:SelectedContinent}_CameraTarget", #percentage: 25]
+	Do		DeleteLocationButtons
+	Do		SetContinentButtons	
+ShowContinent_End
+
+ShowChallenges_Begin
+	Evaluate	{:Font3DInit} = FALSE	[#event: "SetupFont3D"]
+	SetValue		[#SelectedLocation: "{:pressedButton}"]
+	Do		SetLocationButtons
+	Do		BuildChallengeButtons
+	SetVisible	Main	[#model: "Challenges", #state: TRUE]
+ShowChallenges_End
+
+ChallengeSelected_Begin
+	Do		SetupTrackVariables
+	SetVisible	Main	[#model: "NextButton", #state: TRUE]
+	//SetVisible	Main	[#model: "ViewHighscoreButton", #parent: "TrackSelection2D", #state: TRUE]
+	SetButton	Main	[#model: "NextButton", #event: "CarSelection"]
+ChallengeSelected_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// CAR SELECTION
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CarSelectionInitialization_Begin
+	puppetTempo	60
+	// download stuff
+	Do		PreloadTrackData
+	// evaluate the init
+	Evaluate	{:CarSelectionInit} = FALSE	[#event: "SetupCarSelection"]
+	Evaluate	{:CashInit} = FALSE	[#event: "SetupCash"]
+	AddScript	Main	[#script: "[PS] Burnin3 Drag n Drop", #data: [#member: "Main", #camera: "2D_Camera"]]
+	// add camera
+	AddCameraToSprite	{:Sprite}	[#member: "Hangar", #camera: "Hangar_Camera", #index: 1]
+	SetCamera	Hangar	[#cameraName: "Hangar_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]
+	AddScript	Hangar	[#script: "[PS] Bloom", #system: TRUE, #data: [#member: "Hangar", #targetCameraName: "Hangar_Camera", #size: 0.125, #template: #Hangar]]	
+	SetValue		[#selectedTab: "Cars"]
+	Do		SetCarSelectionTabs
+	// show & model & buttons	
+	SetVisible	Main	[#model: ["CarSelection", "BackButton", "NextButton", "Cash", "CarStatisticsInfo"], #state: TRUE]
+	SetVisible	Main	[#model: "BlackLayer3D", #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: "TrackSelection"]
+	SetButton	Main	[#model: "NextButton", #event: "CheckForWeapons"]
+	SetValue		[#carStatistics: FALSE]
+	Event		HideCarStatistics
+	Do		UpdateCars
+	Do		SelectCar
+	SetModel	Main	[#model: "CarStatisticsTag", #shader: "Black_Material"]
+	// set camera
+	SetPosDir	Main	[#object: "3D_Camera", #position: "CarSelection_Camera", #rotation: "CarSelection_Camera"]
+	SetPosDir	Hangar	[#object: "Defaultview", #position: "_NormalView", #rotation: "_NormalView"]
+	SetPosDir	Hangar	[#object: "Hangar_CameraTarget", #position: "{:Car}_CameraTarget", #rotation: "{:Car}_CameraTarget"]
+	AddToMimic	Hangar	[#object: "Hangar_Camera", #target: "DefaultView"]
+	//AddToInterpolator	Main	[#object: "3D_Camera", #target: "CarSelection_Camera", #percentage: {:MenuIntSpeed}]
+	// set currentMenu
+	SetValue		[#currentMenu: "CarSelection"]	
+CarSelectionInitialization_End
+
+SetupCarSelection_Begin
+	PutMessage	Setup CarSelection
+	// Cars tab
+	CreateTextTexture	Main	[#text: gData.data.text.CarsTabName, #texture: "CarsTabNameNormal_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.CarsTabName, #texture: "CarsTabNameRollover_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite]]
+	AssignTexture	Main	[#material: "CarsTabName_Material", #texture1: "CarsTabNameNormal_Texture"]    
+	// Upgrades tab
+	CreateTextTexture	Main	[#text: gData.data.text.UpgradesTabName, #texture: "UpgradesTabNameNormal_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.UpgradesTabName, #texture: "UpgradesTabNameRollover_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite]]
+	AssignTexture	Main	[#material: "UpgradesTabName_Material", #texture1: "UpgradesTabNameNormal_Texture"]    
+	// Bodykits tabenam
+	CreateTextTexture	Main	[#text: gData.data.text.BodykitsTabName, #texture: "BodykitsTabNameNormal_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.BodykitsTabName, #texture: "BodykitsTabNameRollover_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite]]
+	AssignTexture	Main	[#material: "BodykitsTabName_Material", #texture1: "BodykitsTabNameNormal_Texture"]    
+	// weapons tab name
+	CreateTextTexture	Main	[#text: gData.data.text.WeaponsTabName, #texture: "WeaponsTabNameNormal_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.WeaponsTabName, #texture: "WeaponsTabNameRollover_Texture", #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite]]
+	AssignTexture	Main	[#material: "WeaponsTabName_Material", #texture1: "WeaponsTabNameNormal_Texture"]    
+	// misc (standard tab info, price, statistics, price dialog, yes, no)
+	CreateTextTexture	Main	[#text: gData.data.text.CarsTabInfo, #texture: "CarSelectionTabInfo_Texture", #align: #left, #fontSize: 10, #width: 512, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "CarSelectionTabInfo_Material", #texture1: "CarSelectionTabInfo_Texture"]
+	CreateTexture	Main	[#filename: "StatisticsInfo_Texture", #filtering: #lowfiltered]
+	AssignTexture	Main	[#material: "StatisticsInfo_Material", #texture1: "StatisticsInfo_Texture"]
+	CreateTexture	Main	[#filename: "UpgradeSlotBlack_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "UpgradeSlotGrey_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "UpgradeSlotRed_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "WeaponSlotBlack_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "WeaponSlotGrey_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "WeaponSlotRed_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "WeaponSlotYellow_Texture", #filtering: #lowfiltered]
+	CreateTexture	Main	[#filename: "WeaponHeaderBar_Texture", #filtering: #lowfiltered]
+	CreateTextTexture	Main	[#text: gData.data.text.WeaponsPrimaryHeader, #texture: "WeaponsPrimaryHeader_Texture", #fontSize: 12, #width: 128, #height: 32, #lineSpacing:10, #wrap: TRUE, #align: #right, #color: gData.data.textColor.red, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowRed], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "WeaponsPrimaryHeader_Material", #texture1: "WeaponsPrimaryHeader_Texture"]   
+	CreateTextTexture	Main	[#text: gData.data.text.WeaponsSecondaryHeader, #texture: "WeaponsSecondaryHeader_Texture", #fontSize: 12, #width: 128, #height: 32, #lineSpacing:10, #wrap: TRUE, #align: #right, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "WeaponsSecondaryHeader_Material", #texture1: "WeaponsSecondaryHeader_Texture"]   
+	CreateTextTexture	Main	[#text: gData.data.text.BodyKitDefaultHeader, #texture: "BodyKitDefaultHeader_Texture", #fontSize: 12, #width: 128, #height: 32, #lineSpacing:10, #wrap: TRUE, #align: #right, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "BodyKitDefaultHeader_Material", #texture1: "BodyKitDefaultHeader_Texture"]   
+	CreateTextTexture	Main	[#text: gData.data.text.BodyKitModifiedHeader, #texture: "BodyKitModifiedHeader_Texture", #fontSize: 12, #width: 128, #height: 32, #lineSpacing:10, #wrap: TRUE, #align: #right, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "BodyKitModifiedHeader_Material", #texture1: "BodyKitModifiedHeader_Texture"]   
+	CreateTextTexture	Main	[#text: gData.data.text.UpgradesHeader, #texture: "UpgradesHeader_Texture", #fontSize: 12, #width: 128, #height: 32, #lineSpacing:10, #wrap: TRUE, #align: #right, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "UpgradesHeader_Material", #texture1: "UpgradesHeader_Texture"]   
+	//SetModel	Main	[#model: ["WeaponsHeaderBar", "WeaponsPrimaryHeader", "WeaponsSecondaryHeader"], #visibility: #front_nodepth]	
+	// Buy button
+	CreateTextTexture	Main	[#text: gData.data.text.buyFor, #texture: "BuyForButtonNormal_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 256, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.buyFor, #texture: "BuyForButtonRollover_Texture",  #fontSize: 19, #lineSpacing: 18,  #width: 256, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "BuyForButton_Material", #texture1: "BuyForButtonNormal_Texture"]    
+	CreateButton	Main	[#model: "BuyForButton", #handler: "BuySelectedCar", #rollover: "BuyForButtonRollover_Texture", #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// Statistics button
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonNormal_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonRollover_Texture", #fontSize: 12,  #width: 256, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "CarStatisticsButton_Material", #texture1: "CarStatisticsButtonNormal_Texture"]    
+	CreateButton	Main	[#model: "CarStatisticsButton", #event: "ShowCarStatistics", #rollover: "CarStatisticsButtonRollover_Texture", #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// Dialog buttons & text
+	CreateTextTexture	Main	[#text: gData.data.text.dialogText, #texture: "DialogText_Texture",  #fontSize: 22, #lineSpacing: 22, #width: 256, #height: 64, #align: #center, #wrap: TRUE, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "DialogText_Material", #texture1: "DialogText_Texture"] 
+	CreateTextTexture	Main	[#text: gData.data.text.yesButton, #texture: "YesButtonNormal_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.yesButton, #texture: "YesButtonRollover_Texture",  #fontSize: 19, #lineSpacing: 18,  #width: 128, #align: #center, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "YesButton_Material", #texture1: "YesButtonNormal_Texture"] 
+	CreateButton	Main	[#model: "YesButton", #handler: "", #rollover: "YesButtonRollover_Texture", #menu: 1, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateTextTexture	Main	[#text: gData.data.text.noButton, #texture: "NoButtonNormal_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 128, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.noButton, #texture: "NoButtonRollover_Texture",  #fontSize: 19, #lineSpacing: 18,  #width: 128, #align: #center, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "NoButton_Material", #texture1: "NoButtonNormal_Texture"]    
+	CreateButton	Main	[#model: "NoButton", #handler: "", #rollover: "NoButtonRollover_Texture", #menu: 1, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateTextTexture	Main	[#text: gData.data.text.okButton, #texture: "OkButtonNormal_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 256, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.okButton, #texture: "OkButtonRollover_Texture",  #fontSize: 19, #lineSpacing: 18,  #width: 256, #align: #center, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OkButton_Material", #texture1: "OkButtonNormal_Texture"]    
+	CreateButton	Main	[#model: "OkButton", #handler: "", #rollover: "OkButtonRollover_Texture", #menu: 1, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateTexture	Main	[#filename: "Icons_Texture", #filtering: #lowfiltered]
+	CreateTextTexture	Main	[#text: gData.data.text.infoName, #texture: "IconInfoName_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 64, #align: #center, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "IconInfoName_Material", #texture1: "IconInfoName_Texture"]  
+	CreateTextTexture	Main	[#text: gData.data.text.infoCost, #texture: "IconInfoCost_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 64, #align: #center, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3GlowBlack], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "IconInfoCost_Material", #texture1: "IconInfoCost_Texture"]  
+	// car selection
+	SetModel	Main	[#model: "<NextCar", #shader: "WhiteFont3D_Material"]
+	SetModel	Main	[#model: ">PreviousCar", #shader: "WhiteFont3D_Material"]
+	SetModel	Main	[#model: "<NextCarGlow", #shader: "DarkFont3DGlow_Material"]
+	SetModel	Main	[#model: ">PreviousCarGlow", #shader: "DarkFont3DGlow_Material"]
+	// hangar setup
+	CreateTexture	Hangar	[#filename: "DefaultShadow_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "DefaultReflection_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "Hangar_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "HangarLightmap_Texture", #filtering: #lowfiltered]
+	CreateTexture	Hangar	[#filename: "HangarTransparent_Texture", #renderFormat: #rgba8888]
+	CreateTexture	Hangar	[#filename: "HangarAdd_Texture", #renderFormat: #rgba8888]
+	AssignTexture	Hangar	[#material: "Hangar_Material", #lightmap: "HangarLightmap_Texture"]
+	BlendShader	Hangar	[#materialName: "HangarAdd_Material", #blendMode: #add]
+	SetCamera	Hangar	[#cameraName: "Hangar_Camera", #fov: 58.0]
+	SetModel	Hangar	[#model: ["VolumeLight01", "VolumeLight02", "VolumeLight03", "VolumeLight04", "VolumeLight05"], #visibility: #both_nodepth]
+	SetModel	Hangar	[#model: ["VolumeLight06", "VolumeLight07", "VolumeLight08", "VolumeLight09", "VolumeLight10"], #visibility: #both_nodepth]
+	SetParent	Hangar	[#Camera: "DefaultView", #parent: "Hangar_CameraTarget"]
+	SetVisible	Hangar	[#model: "*View", #state: FALSE]
+	Do		BuildCarPositions
+	Do		GetAndSetCars
+	SetValue		[#selectedCar: "{:Car}"]
+	SetValue		[#CarSelectionInit: TRUE]	
+SetupCarSelection_End
+
+HideCarSelection_Begin
+	PutMessage	Hide CarSelection
+	RemoveCameraFromSprite	{:Sprite}	[#index: 1]	
+	SetVisible	Main	[#model: ["CarSelection", "BackButton", "NextButton"], #state: FALSE]
+	SetButton	Main	[#model: "BackButton", #event: ""]
+	SetButton	Main	[#model: "NextButton", #event: ""]
+	SetValue		[#scriptList: []]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+HideCarSelection_End
+
+TabSelection_Begin
+	AddToInterpolator	Hangar	[#object: "DefaultView", #target: "_NormalView", #percentage: 15])
+	SetValue		[#SelectedTab: "{:pressedButton}"]
+	Evaluate	"{:PressedButton}"="Upgrades"	[#event: "ShowCarStatistics"]
+	Evaluate	"{:PressedButton}"<>"Upgrades"	[#event: "HideCarStatistics"]	
+	Do		SetCarSelectionTabs
+	Event		CarSelection{:SelectedTab}
+TabSelection_End
+
+CarSelectionCars_Begin
+	PutMessage	Car car selection
+CarSelectionCars_Begin
+
+CarSelectionUpgrades_Begin
+	PutMessage	Car upgrades
+CarSelectionUpgrades_Begin
+
+CarSelectionBodykits_Begin
+	PutMessage	Car Bodykits
+CarSelectionBodykits_Begin
+
+CarSelectionWeapons_Begin
+	PutMessage	Car weapons
+CarSelectionWeapons_Begin
+
+ShowCarStatistics_Begin
+	Do		UpdateStatistics
+	SetVisible	Main	[#model: "CarStatisticsInfo", #parent: "CarStatisticsTag", #state: TRUE]
+	SetModel	Main	[#model: "CarStatisticsTag", #shader: "Orange_Material"]
+	SetModel	Main	[#model: "CarStatisticsInfo", #visibility: #front_nodepth]	
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonNormal_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonRollover_Texture", #fontSize: 12,  #width: 256, #align: #left, #color: gData.data.textColor.White, #nearFiltering: TRUE]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Frontal3D_Camera", #percentage: {:MenuIntSpeed}]
+	SetButton	Main	[#model: "CarStatisticsButton", #event: "HideCarStatistics"]
+ShowCarStatistics_End
+
+HideCarStatistics_Begin
+	SetVisible	Main	[#model: "CarStatisticsInfo", #state: FALSE]
+	SetModel	Main	[#model: "CarStatisticsTag", #shader: "Black_Material"]
+	SetModel	Main	[#model: "CarStatisticsInfo", #visibility: #front]	
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonNormal_Texture", #fontSize: 12, #width: 256, #align: #left, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.statistics, #texture: "CarStatisticsButtonRollover_Texture", #fontSize: 12,  #width: 256, #align: #left, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "CarSelection_Camera", #percentage: {:MenuIntSpeed}]
+	SetButton	Main	[#model: "CarStatisticsButton", #event: "ShowCarStatistics"]
+HideCarStatistics_End
+
+HoldForCarsDownload_Begin
+	Evaluate	{:LoadingInit}=FALSE	[#Event: "SetupLoading"]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "Loading_Camera"]
+	SetCamera	Main	[#cameraName: "Loading_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]
+	SetValue	gGame.menu	[#menu: 9]
+	SetVisible	Main	[#model: "BlackLayer3D", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 100]
+	AddTrigger	{:CarsDownloaded}=TRUE	[#event: "ContinueCarSelection"]
+	AddToList	gSystem.HandlerList	[#value: ["UpdateCarsLoadPercentage", 0, 3]]
+	SetPosDir	Main	[#object: "Loading_Camera", #position: "Loading1_Camera", #rotation: Loading1_Camera"]
+	AddToInterpolator	Main	[#object: "Loading_Camera", #target: "Loading2_Camera", #percentage: {:MenuIntSpeed}]
+HoldForCarsDownload_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Dialog events (buy dialogs, not enough money and hide)
+//-------------------------------------------------------------------------------------------------------------------------------------------
+ShowBuyCarDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #state: FALSE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "YesButton", #handler: "BuyCar"]
+	SetButton	Main	[#model: "NoButton", #event: "HideDialog"]	
+ShowBuyCarDialog_End
+
+ShowBuyUpgradeDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #state: FALSE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "YesButton", #handler: "BuySelectedUpgrade"]
+	SetButton	Main	[#model: "NoButton", #event: "HideDialog"]	
+ShowBuyUpgradeDialog_End
+
+ShowBuyWeaponDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #state: FALSE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "YesButton", #handler: "BuySelectedWeapon"]
+	SetButton	Main	[#model: "NoButton", #event: "HideDialog"]	
+ShowBuyWeaponDialog_End
+
+ShowBuyBodyKitDialog_Begin	
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #state: FALSE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "YesButton", #handler: "BuySelectedBodyKit"]
+	SetButton	Main	[#model: "NoButton", #event: "HideDialog"]	
+ShowBuyBodyKitDialog_End
+
+ShowMaxedOutDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	CreateTextTexture	Main	[#text: gData.data.text.MaxedOutUpgrade, #texture: "DialogText_Texture",  #fontSize: 22, #lineSpacing: 22, #width: 256, #height: 64, #align: #center, #wrap: TRUE, #color: gData.data.textColor.black]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #parent: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: FALSE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "OkButton", #event: "HideDialog"]	
+ShowMaxedOutDialog_End
+
+ShowNotEnoughMoneyDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	CreateTextTexture	Main	[#text: gData.data.text.NotEnough, #texture: "DialogText_Texture",  #fontSize: 22, #lineSpacing: 22, #width: 256, #height: 64, #align: #center, #wrap: TRUE, #color: gData.data.textColor.black]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #parent: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: FALSE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "OkButton", #event: "HideDialog"]
+ShowNotEnoughMoneyDialog_End
+
+ShowNoWeaponsDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]
+	CreateTextTexture	Main	[#text: gData.data.text.NoWeaponsWarning, #texture: "DialogText_Texture",  #fontSize: 22, #lineSpacing: 22, #width: 256, #height: 64, #align: #center, #wrap: TRUE, #color: gData.data.textColor.black]
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #parent: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: FALSE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "OkButton", #event: "HideDialog"]
+ShowNoWeaponsDialog_End
+
+ShowDailyChallengeDialog_Begin
+	PlaySound	Dialog_SFX
+	SetValue	gGame.menu	[#menu: 1]	
+	CreateTextTexture	Main	[#text: gData.data.text.DailyChallengeWarning, #texture: "DialogText_Texture",  #fontSize: 20, #lineSpacing: 24, #width: 256, #height: 64, #align: #center, #wrap: TRUE, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "DialogText_Material", #texture1: "DialogText_Texture"] 	
+	CreateTextTexture	Main	[#text: gData.data.text.okButton, #texture: "OkButtonNormal_Texture",  #fontSize: 19, #lineSpacing: 18, #width: 256, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.okButton, #texture: "OkButtonRollover_Texture",  #fontSize: 19, #lineSpacing: 18,  #width: 256, #align: #center, #color: gData.data.textColor.White, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "OkButton_Material", #texture1: "OkButtonNormal_Texture"]    
+	CreateButton	Main	[#model: "OkButton", #handler: "", #rollover: "OkButtonRollover_Texture", #menu: 1, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]		
+	SetVisible	Main	[#model: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: "DialogOkTag", #parent: "Dialog", #state: TRUE]
+	SetVisible	Main	[#model: ["DialogYesTag", "DialogNoTag"], #parent: "Dialog", #state: FALSE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 45]
+	SetButton	Main	[#model: "OkButton", #event: "HideDialog"]
+ShowDailyChallengeDialog_End
+
+HideDialog_Begin
+	SetValue	gGame.menu	[#menu: 0]
+	SetVisible	Main	[#model: "Dialog", #state: FALSE]		
+HideDialog_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Hold while downloading track
+//-------------------------------------------------------------------------------------------------------------------------------------------
+HoldForTrackDownload_Begin
+	Evaluate	{:LoadingInit}=FALSE	[#Event: "SetupLoading"]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "Loading_Camera"]
+	SetCamera	Main	[#cameraName: "Loading_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2])]
+	SetValue	gGame.menu	[#menu: 9]
+	SetVisible	Main	[#model: "BlackLayer3D", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 100]
+	AddTrigger	{:SharedDownloaded}=TRUE;{:DataDownloaded}=TRUE;{:TrackDownloaded}=TRUE	[#event: "ContinueTrackInitialization"]	
+	AddToList	gSystem.HandlerList	[#value: ["UpdateTrackLoadPercentage", 0, 3]]
+	SetPosDir	Main	[#object: "Loading_Camera", #position: "Loading1_Camera", #rotation: Loading1_Camera"]
+	AddToInterpolator	Main	[#object: "Loading_Camera", #target: "Loading2_Camera", #percentage: {:MenuIntSpeed}]
+HoldForTrackDownload_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Start Race
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CheckForWeapons_Begin
+	Do		CheckWeapons
+CheckForWeapons_End
+
+PreStartChallenge_Begin
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	Do		SaveData
+	FadeSound	BR3Adrenaline_Music	[#fadeTime: 1500]
+	SetVisible	Main	[#model: ["Menu", "TrackSelection", "CarSelection", "Cash" , "NextButton", "BackButton"], #state: FALSE]
+	SetValue		[#scriptList: []]
+	SetValue		[#scene: "Tracks"]
+	SetValue		[#currentMenu: #none]
+	Do		ClearHandlerLists
+	Do		CreateInitializingTexture
+	Event		TrackInitialization
+PreStartChallenge_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Loading
+//-------------------------------------------------------------------------------------------------------------------------------------------
+SetupLoading_Begin
+	Evaluate	{:Font3DInit}=FALSE	[#event: "SetupFont3D"]	
+	Create3DText	Main	[#text: "LOADING  ", #Size: 55, #alignH: #left, #alignV: #top, #alignVRef: "Loading", #parent: "Loading", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	Create3DText	Main	[#text: "000%", #Size: 54, #alignH: #left, #alignV: #top, #alignVRef: "Loading", #parent: "Loading", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	SetVisible	Main	[#model: "Loading", #state: TRUE]
+	SetPosDir	Main	[#object: "LOADING  ", #positionOffset: vector(208, 0, -117.0)]
+	SetPosDir	Main	[#object: "000%", #positionOffset: vector(310, 0, -160.0)]
+	SetValue		[#LoadingInit: TRUE]	
+SetupLoading_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// General
+//-------------------------------------------------------------------------------------------------------------------------------------------
+SetupCash_Begin
+	// Cash
+	CreateTextTexture	Main	[#text: gData.data.text.cash, #texture: "CashTag_Texture", #fontSize: 12, #width: 64, #align: #right, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: "$ {:Cash}", #texture: "Cash_Texture", #fontSize: 15, #width: 128, #align: #right, #color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "CashTag_Material", #texture1: "CashTag_Texture"]	
+	AssignTexture	Main	[#material: "Cash_Material", #texture1: "Cash_Texture"]	
+	Do		UpdateCash
+	SetValue		[#CashInit: TRUE]
+SetupCash_End
+
+SetupFont3D_Begin
+	ResetWorld	Font3D
+	CreateTexture	Font3D	[#filename: "Font3D_Texture", #filtering: #lowfiltered]
+	CreateTexture	Font3D	[#filename: "Font3DGlow_Texture", #filtering: #lowfiltered, #renderFormat: #rgba8888]
+	CloneModel	Main	[#sourceMember: "Font3D", #lod: FALSE, #delete: TRUE]
+	DuplicateShader	Main	[#shader: "Font3D_Material", #sourceMember: "Main", #shaderTag: "White"]
+	DuplicateShader	Main	[#shader: "Font3D_Material", #sourceMember: "Main", #shaderTag: "Dark"]
+	DuplicateShader	Main	[#shader: "Font3D_Material", #sourceMember: "Main", #shaderTag: "Yellow"]
+	DuplicateShader	Main	[#shader: "Font3DGlow_Material", #sourceMember: "Main", #shaderTag: "White"]
+	DuplicateShader	Main	[#shader: "Font3DGlow_Material", #sourceMember: "Main", #shaderTag: "Dark"]
+	DuplicateShader	Main	[#shader: "Font3DGlow_Material", #sourceMember: "Main", #shaderTag: "Dark2"]
+	DuplicateShader	Main	[#shader: "Font3DGlow_Material", #sourceMember: "Main", #shaderTag: "Yellow"]
+	SetShader	Main	[#shader: "WhiteFont3D_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(64, 64, 64), #emissive: rgb(255, 255, 255), #specular: rgb(255, 255, 255), #shininess: 35]
+	SetShader	Main	[#shader: "WhiteFont3DGlow_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(255, 255, 255)]
+	SetShader	Main	[#shader: "DarkFont3D_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(128, 128, 128), #specular: rgb(255, 255, 255), #shininess: 35]
+	SetShader	Main	[#shader: "DarkFont3DGlow_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(131, 132, 137)]
+	SetShader	Main	[#shader: "Dark2Font3DGlow_Material", #blend: 50.0, #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(64, 64, 64)]
+	SetShader	Main	[#shader: "YellowFont3D_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(255, 170, 0), #specular: rgb(255, 255, 255), #shininess: 35]
+	SetShader	Main	[#shader: "YellowFont3DGlow_Material", #useDiffuseWithTexture: TRUE, #diffuse: rgb(255, 255, 255), #emissive: rgb(255, 170, 0)]
+	SetValue		[#Font3DInit: TRUE]
+SetupFont3D_End
+

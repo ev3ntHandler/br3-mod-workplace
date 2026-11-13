@@ -1,0 +1,3 @@
+\Data\Shared\3d\	[#cast: "Shared"]
+\Data\Shared\Textures\	[#cast: "Shared"]
+\Data\Shared\Audio\	[#cast: "Shared"]

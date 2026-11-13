@@ -1,0 +1,124 @@
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Current selected track initialization
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CurrentTrackInitialization_Begin
+	ResetSprites		[#start: 1, #end: 5]
+	BlackOut	{:World}Assets	[#cameraName: "DefaultView", #state: TRUE, #textureName: "Initializing_Texture", #multiSize: #fullScreen640]
+	CreateSprite	{:World}Assets	[#channel: 1, #size: {:Resolution}, #loc: point({:Resolution}[1]/2, {:Resolution}[2]/2), #manager: TRUE]
+	AddValue		[#name: "Member", #value: member("{:World}Assets")]
+	AddValue		[#name: "Sprite", #value: 1]
+	RemoveLod	{:World}Assets
+	Event		SetupObjects
+	Event		SetupPickups
+	Event		SetupTraffic
+	Event		SetupInvisibleWall
+	Event		SetupWeapons
+	Event		SetupTrackData
+	Event		Setup{:GameMode}
+	Event		{:World}Textures	
+	SetupLighting	{:World}Assets	[#type: #normal]
+	LinkToTheRoot	{:World}Assets
+	Event		{:World}Track{:Track}Build
+	DeleteTheModels	{:World}Assets
+	Event		AddScripts
+	Event		TrackSpecifics
+	Event		{:Players}PlayerInterface
+	Event		SetupChallenge
+	Event		Misc
+CurrentTrackInitialization_End
+
+AddScripts_Begin	
+	Iterate	{:Players}	[#event: "PlayerScripts"]
+	Iterate	{:AI}	[#event: "AIScripts"]
+	Iterate	{:Players}	[#event: "SetupCamera"]	
+	AddScript	{:World}Assets	[#script: "[PS] Effect Manager", #data: [:]]
+AddScripts_End
+
+PlayerScripts_Begin
+	AddScript	{:World}Assets	[#script: "[PS] Advanced Car", #data: [#scriptName: "PlayerCar{:Iteration}", #controller: #player, #states: {:PlayerStates}, #camera: TRUE]]
+	AddScript	{:World}Assets	[#script: "[PS] Vehicle Shadow Caster", #data: [#member: "{:World}Assets", #light: "SunLight", #tag: gGame.Cars.count]]	
+PlayerScripts_End
+
+AIScripts_Begin
+	//AddScript	{:World}Assets	[#script: "[PS] Simple Car", #data: [#scriptName: "AICar{:Iteration}", #controller: #AI, #states: {:AIStates}]]
+	AddScript	{:World}Assets	[#script: "[PS] Advanced Car", #data: [#scriptName: "AICar{:Iteration}", #controller: #AI, #states: {:AIStates}]]
+	AddScript	{:World}Assets	[#script: "[PS] Vehicle Shadow Caster", #data: [#member: "{:World}Assets", #light: "SunLight", #tag: gGame.Cars.count]]
+AIScripts_End
+
+TrackSpecifics_Begin
+	SetFog	{:World}Assets	[#camera: gGame.camera[1].Camera.name, #color: {:FogColor}, #near: {:FogRange}, #far: {:FogRange}, #type: #linear]
+	SetFog	{:World}Assets	[#camera: gGame.camera[2].Camera.name, #color: {:FogColor}, #near: {:FogRange}, #far: {:FogRange}, #type: #linear]
+	CreateTexture	Skyboxes	[#filename: "Skybox_Texture", #renderFormat: #rgba8888, #filtering: #lowfiltered]
+	SetSkybox	{:World}Assets	[#skybox: "{:Skybox}"]
+TrackSpecifics_End		
+
+1PlayerInterface_Begin
+	ResetWorld	1PlayerInterface	
+	CreateTexture	1PlayerInterface	[#filename: "Interface_Texture", #renderFormat: #rgba8888, #nearFiltering: TRUE, #filtering: #high]
+	CreateTexture	1PlayerInterface	[#filename: "DeFreeze_Texture", #renderFormat: #rgba8888, #nearFiltering: FALSE, #filtering: #lowfiltered]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.PrimaryWeapons[symbol(gGame.cars[1].general.data.weapons.primary)].name, #texture: "PrimaryWeapons_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.SecondaryWeapons[symbol(gGame.cars[1].general.data.weapons.secondary)].name, #texture: "SecondaryWeapons_Texture", #fontSize: 12, #align: #left, #color: rgb(255, 255, 255)]
+	AssignTexture	1PlayerInterface	[#material: "PrimaryWeaponName_Material", #texture1: "PrimaryWeapons_Texture"]	
+	AssignTexture	1PlayerInterface	[#material: "SecondaryWeaponName_Material", #texture1: "SecondaryWeapons_Texture"]
+	SetVisible	1PlayerInterface	[#model: ["Position1Tag", "Position1Name", "Position1State", "Position2Tag", "Position2Name", "Position2State", "Position3Tag", "Position3Name", "Position3State", "Position4Tag", "Position4Name", "Position4State"], #state: FALSE]
+	Iterate	gGame.cars.count	[#event: "CarNameTextures"]
+	SetModel	1PlayerInterface	[#model: "Position1Tag", #resource: "Position1TagRed"]	
+	SetModel	Interface	[#model: "Item", #resource: "Challenge{:currentItem}"]
+	SetMaterial	1PlayerInterface	[#materialName: "InterfaceRed_Material", #useDiffuseWithTexture: TRUE]	
+	AddCameraToSprite	{:Sprite}	[#member: "1PlayerInterface", #camera: "Interface1_Camera"]
+	SetCamera	1PlayerInterface	[#cameraName: "Interface1_Camera", #projection: #orthographic, #orthoHeight: 480.0,  #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]), #clearAtRender: FALSE]
+	AddValue		[#name: "Interface", #value: member("1PlayerInterface")]
+	AddValue		[#name: "InterfaceName", #value: "1PlayerInterface"]
+	SetVisible	1PlayerInterface	[#model: "Hud", #state: FALSE]
+	// interface (future adjustment automatically does multiplayers) #Timer & #score can both be #up Or #down. #speedo or #weapons are booleens. #Elimation, #Countdown, #positions
+	AddScript	{:World}Assets	[#script: "[PS] Interface", #data: [#Timer: TRUE, #countDown: TRUE, #Elimination: TRUE, #Positions: TRUE, #Score: TRUE, #Speedo: TRUE, #weapons: {:playerWeapons1}, #positions: TRUE]]
+	AddValue		[#name: "Interface", #value: member("1PlayerInterface")]
+	AddValue		[#name: "InterfaceName", #value: "1PlayerInterface"]	
+	CreateTextTexture	1PlayerInterface	[#text: "NITRO BOOST!", #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255), #nearFiltering: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: "STATUS TEXT, HIER KOMT ALLERLEI BENDE!", #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #align: #left, #color: rgb(0, 0, 0), #nearFiltering: TRUE]
+	AssignTexture	1PlayerInterface	[#material: "StatusHeader_Material", #texture1: "StatusHeader_Texture"]	
+	AssignTexture	1PlayerInterface	[#material: "StatusText_Material", #texture1: "StatusText_Texture"]		
+	// wrongway
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.WrongWayHeader, #texture: "WrongWayStatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255), #nearFiltering: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.WrongWayText, #texture: "WrongWayStatusText_Texture", #fontSize: 14, #height: 32, #align: #left, #color: rgb(0, 0, 0), #nearFiltering: TRUE]
+	AssignTexture	1PlayerInterface	[#material: "WrongWayStatusHeader_Material", #texture1: "WrongWayStatusHeader_Texture"]	
+	AssignTexture	1PlayerInterface	[#material: "WrongWayStatusText_Material", #texture1: "WrongWayStatusText_Texture"]
+	// trophies
+	CreateTextTexture	1PlayerInterface	[#text: "TROPHY", #texture: "TrophyStatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255), #nearFiltering: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: "TROPHYTEXT", #texture: "TrophyStatusText_Texture", #fontSize: 12, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32], #nearFiltering: TRUE]
+	AssignTexture	1PlayerInterface	[#material: "TrophyStatusHeader_Material", #texture1: "TrophyStatusHeader_Texture"]
+	AssignTexture	1PlayerInterface	[#material: "TrophyStatusText_Material", #texture1: "TrophyStatusText_Texture"]  
+1PlayerInterface_End
+
+CarNameTextures_Begin
+	CreateTextTexture	1PlayerInterface	[#text: gGame.cars[{:Iteration}].general.data.name, #texture: "CarName{:Iteration}_Texture", #fontSize: 12, #lineSpacing: 10, #align: #right, #color: rgb(255, 255, 255), #width: 128]
+	AssignTexture	1PlayerInterface	[#material: "Position{:Iteration}Name_Material", #texture1: "CarName{:Iteration}_Texture"]	
+	CreateTextTexture	1PlayerInterface	[#text: "{:Iteration}", #texture: "CarPosition{:Iteration}_Texture", #fontSize: 15, #lineSpacing: 11, #align: #Center, #color: rgb(255, 255, 255), #width: 32]
+	AssignTexture	1PlayerInterface	[#material: "Position{:Iteration}State_Material", #texture1: "CarPosition{:Iteration}_Texture"]
+	SetVisible	1PlayerInterface	[#model: ["Position{:Iteration}Tag", "Position{:Iteration}Name", "Position{:Iteration}State"], #state: TRUE, #parentName: "Positions"]	
+CarNameTextures_End
+
+Misc_Begin
+	AddScript	{:World}Assets	[#script: "[PS] Motion Blur", #system: TRUE, #data: [#member: "{:World}Assets", #camera: "Player1_Camera", #passes: 7]]
+	AddScript	{:World}Assets	[#script: "[PS] Bloom", #system: TRUE, #data: [#targetCameraName: "Player1_Camera", #size: 0.25, #skybox: TRUE, #template: #{:World}Track{:Track}]]
+	AddScript	{:World}Assets	[#script: "[PS] FPS Counter", #data: [:]]
+	SetAntiAliasing	{:Sprite}	[#mode: #{:AntiAliasing}]
+	// TEMPORARY
+	SetMaterial	{:World}Assets	[#materialName: "{:World}Opaque_Material", #transparent: FALSE]
+Misc_End
+
+SetupCamera_Begin
+	SetCamera	{:World}Assets	[#cameraName: gGame.camera[{:Iteration}].camera.name, #near: 0.0, #far: 500.0, #fov: 65.0, #clearAtRender: FALSE]
+	SetValue	gGame.Camera[{:Iteration}]	[#target: gGame.Cars[{:Iteration}].general.tag]
+	SetValue	gGame.Camera[{:Iteration}]	[#offset: vector(0.0, -5.5, 1.55)]
+	SetValue	gGame.Camera[{:Iteration}]	[#rotation: vector(82.0, 0.0, 0.0)]	
+	Evaluate	"{:Car}"="BlackTruck"	[#event: "BlackTruckCamera"]
+	Evaluate	"{:Car}"="Tank"	[#event: "TankCamera"]
+	Evaluate	"{:Car}"="Apache"	[#event: "ApacheCamera"]
+	//SetValue	gGame.Camera[{:Iteration}]	[#offset: vector(-10.0, 0.0, 1.55)]
+	//SetValue	gGame.Camera[{:Iteration}]	[#rotation: vector(82.0, 0.0, -90.0)]	
+SetupCamera_End
+
+
+
+	

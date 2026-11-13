@@ -1,0 +1,31 @@
+SetupCars_Begin
+	CreateTexture	{:SetupCar}	[#filename: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	CreateTexture	{:SetupCar}	[#filename: "CarReflection_Texture"])
+		
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]	
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Glass_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Wheels_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}_Material", #texture2: "CarReflection_Texture"]
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Glass_Material", #texture2: "CarReflection_Texture"]
+		
+	SetMaterial	{:SetupCar}	[#materialName: "{:SetupCar}_Material", #blendFunction1: #multiply, #textureMode2: #reflection, #blendFunction2: #add]
+	SetMaterial	{:SetupCar}	[#materialName: "{:SetupCar}Glass_Material", #blendFunction1: #multiply, #textureMode2: #reflection, #blendFunction2: #add]
+	SetMaterial	{:SetupCar}	[#materialName: "{:SetupCar}Wheels_Material", #shininess: 0.0]
+SetupCars_End
+
+SetupApache_Begin
+	CreateTexture	{:SetupCar}	[#filename: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	CreateTexture	{:SetupCar}	[#filename: "CarReflection_Texture"])
+	CreateTexture	{:SetupCar}	[#filename: "{:SetupCar}Rotor_Texture"]
+	
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]	
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Glass_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Wheels_Material", #texture1: "{:SetupCar}Skin{:SetupSkin}_Texture"]
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Rotor_Material", #texture1: "{:SetupCar}Rotor_Texture"]
+	
+	AssignTexture	{:SetupCar}	[#material: "{:SetupCar}Glass_Material", #texture2: "CarReflection_Texture"]
+	
+	SetMaterial	{:SetupCar}	[#materialName: "{:SetupCar}Glass_Material", #blendFunction1: #multiply, #textureMode2: #reflection, #blendFunction2: #add]
+	SetMaterial	{:SetupCar}	[#materialName: "{:SetupCar}Wheels_Material", #shininess: 0.0]
+SetupApache_End

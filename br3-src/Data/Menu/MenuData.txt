@@ -1,0 +1,217 @@
+Text_Begin
+	// GameModes
+	Race	RACE
+	BattleRace	BATTLE RACE
+	Elimination	ELIMINATION
+	Survivor	SURVIVOR
+	GooseHunt	GOOSEHUNT
+	Rampage	RAMPAGE
+	RivalBattle	RIVAL BATTLE
+	BossBattle	BOSS BATTLE
+	// Main buttons & text
+	StartButton	START
+	NextButton	NEXT
+	BackButton	BACK
+	RetryButton	RETRY
+	//Footer	BURNIN' RUBBER 3 (C) XFORM 2009. GAME CREATED FOR SHOCKWAVE.
+	Footer	BURNIN' RUBBER 3 (C) XFORM 2009-2020.
+	// Options
+	AudioSettingsText	TOGGLE THE SOUND ON OR OFF.
+	VisualSettingsText	TOGGLE THESE SETTINGS TO INCREASE PERFORMANCE.
+	// Domination
+	PlayerName	Click here to enter your name!
+	PlayerNameInfo	Type your name. Press ENTER when you are done.
+	Warning	 All your previous saved data will be erased!	
+	// Track Selection
+	Cash	CASH
+	TrackSelectionTabName	WORLD DOMINATION
+	TrackSelectionTabInfo	CLEAR CHALLENGES TO ADVANCE AND BECOME THE ULTIMATE DOMINATOR!
+	DailyChallengeTabName	DAILY CHALLENGE
+	DailyChallengeTabInfo	DAILY CHALLENGES UNLOCKS RANDOM BODY PARTS EACH DAY!
+	DailyChallengeWarning	START A NEW DOMINATION FIRST!
+	// Highscore
+	ViewHighscore	VIEW HIGH SCORE
+	SendHighscore	SUBMIT HIGH SCORE
+	//Continents
+	America	AMERICA
+	Asia	ASIA
+	Africa	AFRICA
+	Europe	EUROPE
+	Australia	AUSTRALIA
+	// info
+	PrizeMoney	PRIZE MONEY
+	DamageTarget	DAMAGE TARGET
+	// Car Selection
+	CarsTabName	CARS
+	CarsTabInfo	SELECT A CAR BY CLICKING THE LEFT OR RIGHT ARROW!
+	UpgradesTabName	UPGRADES
+	UpgradesTabInfo	UPGRADE YOUR CAR BY DRAGGING UPGRADES ONTO IT!
+	BodykitsTabName	BODYKITS
+	BodykitsTabInfo	CUSTOMIZE THE LOOK OF YOUR CAR BY DRAGGING PARTS ONTO IT!
+	WeaponsTabName	WEAPONS
+	WeaponsTabInfo	ARM YOURSELF BY DRAGGING WEAPONS ONTO YOUR CAR!
+	bossCar	YOU CANNOT CUSTOMIZE A BOSS CAR!
+	Statistics	STATISTICS
+	BuyFor	BUY FOR
+	WeaponsPrimaryHeader	PRIMARY WEAPONS
+	WeaponsSecondaryHeader	SECONDARY WEAPONS
+	BodyKitDefaultHeader	DEFAULT BODYKIT
+	BodyKitModifiedHeader	MODIFIED BODYKIT
+	UpgradesHeader	UPGRADES
+	// Dialog
+	DialogText	NOTHING
+	NotEnough	YOU DON'T HAVE ENOUGH MONEY
+	YesButton	YES
+	NoButton	NO
+	OkButton	OK
+	CancelButton	CANCEL	
+	BuyThisCarFor	BUY THIS CAR FOR
+	BuyThisWeaponFor	BUY WEAPON FOR
+	BuyThisBodyKitFor	BUY BODYKIT FOR
+	BuyThisUpgradeFor	BUY UPGRADE FOR
+	MaxedOutUpgrade	THIS UPGRADE IS MAXED OUT!
+	NoWeaponsWarning	DON'T FORGET YOUR WEAPONS!
+	InfoName	ITEM NAME
+	InfoCost	ITEM COST
+	// Interface ingame
+	Pause	PAUSE
+	PauseContinue	CONTINUE
+	PauseRetry	RETRY
+	PauseQuit	QUIT
+	NitroHeader	NITRO BOOST!
+	NitroText	WATCH OUT! FAST DRIVING AHEAD!
+	RepairHeader	CAR REPAIR
+	RepairText	YOUR CAR HAS BEEN REPAIRED!
+	DetonatorHeader	INSTANT DETONATOR!
+	DetonatorText	EVERYTHING MUST GO!
+	HiddenPackageHeader	HIDDEN PACKAGE FOUND!
+	HiddenPackageText	COLLECT ALL FOR A BONUS!
+	CashSmallHeader	SMALL CASH BONUS!
+	CashSmallText	EVERY LITTLE THING HELPS!
+	CashBigHeader	BIG CASH BONUS!
+	CashBigText	THIS WILL HELP YOU OUT!
+	// Trophies
+	WorldDominationHeader	WORLD DOMINATION
+	WorldDominationText	COMPLETED ALL 51 CHALLENGES!
+	ILikeMoneyHeader	 I LIKE MONEY
+	ILikeMoneyText	YOU OWN $1,000,000!
+	MenaceToSocietyHeader	MENACE TO SOCIETY
+	MenaceToSocietyText	DESTROYED 100 TRAFFIC VEHICLES!
+	ToughGuyHeader	TOUGH GUY
+	ToughGuyText	DESTROYED 100 RIVAL CARS!
+	IBelieveICanFlyHeader	I BELIEVE I CAN FLY!
+	IBelieveICanFlyText	COLLECTED 51 HIDDEN PACKAGES!
+	ActionHeroHeader	ACTION HERO WANNABE
+	ActionHeroText	ACTIVATED 50 DETONATORS!
+	SpeedDemonHeader	SPEED DEMON
+	SpeedDemonText	RECEIVED 50 TIME BONUSSES!
+	GreedyHeader	GREEDY
+	GreedyText	UNLOCKED ALL UNLOCKABLES!
+	GodOfWarHeader	GOD OF WAR
+	GodOfWarText	FIRED 10.000 BULLETS!
+	EyeOfTheTigerHeader	EYE OF THE TIGER
+	EyeOfTheTigerText	CLEARED 7 SURVIVOR CHALLENGES!
+	TheDestructorHeader	THE DESTRUCTOR
+	TheDestructorText	CLEARED 5 RAMPAGE CHALLENGES!
+	ImNoQuitterHeader	I'M NO QUITTER
+	ImNoQuitterText	WRECKED YOUR CAR 100 TIMES!
+	ThunderStruckHeader	THUNDER STRUCK
+	ThunderStruckText	YOU SHOULDN'T BE HERE!
+	MonkeyBusinessHeader	MONKEY BUSINESS!
+	MonkeyBusinessText	OEH OEH OEH AAAH!
+	PigsFTWHeader	PIGS FTW!
+	PigsFTWText	BACON, BACON, BACON!
+	MonkeyHeader	MONKEY BUSINESS!
+	MonkeyText	OEH OEH OEH AAAH!
+	PigHeader	PIGS FTW!
+	PigText	BACON, BACON, BACON!
+	RivalDownHeader	OPPONENT DOWN!
+	RivalDownText	DESTROY 'EM ALL!	
+	WrongWayHeader	WRONG WAY!
+	WrongWayText	TURN AROUND!	
+	//Results
+	ResultsTabName	RESULTS
+	ResultsScoreName	SCORE
+	ResultsScore	$ 0
+	ResultsTimeBonusName	TIME BONUS
+	ResultsTimeBonus	$ 0
+	ResultsPrizeMoneyName	PRIZE MONEY
+	ResultsPrizeMoney	$ 0
+	ResultsTotalScoreName	TOTAL
+	ResultsTotalScore	$ 0
+	Failed	FAILED
+	//Rewards
+	NewItems	NEW ITEMS UNLOCKED!
+	Reward1	• REWARD 1
+	Reward2	• REWARD 2
+	Reward3	• REWARD 3
+	UnlockTrack	• NEW CHALLENGE UNLOCKED!
+	UnlockedTrack	• CHALLENGE ALREADY AVAILABLE
+	UnlockCar	• NEW CAR UNLOCKED!
+	UnlockedCar	• CAR ALREADY AVAILABLE
+	UnlockUpgrade	• NEW UPGRADE UNLOCKED!
+	UnlockedUpgrade	• UPGRADE ALREADY AVAILABLE
+	UnlockPrimaryWeapon	• NEW PRIMARY WEAPON UNLOCKED!
+	UnlockedPrimaryWeapon	• PRIMARY WEAPON ALREADY AVAILABLE
+	UnlockSecondaryWeapon	• NEW SECONDARY WEAPON UNLOCKED!
+	UnlockedSecondaryWeapon	• SECONDARY WEAPON ALREADY AVAILABLE
+	UnlockBodykit	• NEW RANDOM BODYKIT PART UNLOCKED!
+	UnlockedBodykit	• BODYKIT PART ALREADY AVAILABLE
+	// GameModes
+	GameModeRace	Win first place to get your hands on some serious cash! Weapons are disabled!
+	GameModeBattleRace	Be sure to pack enough weapons to blow your enemies away! Finish first to win!
+	GameModeRivalBattle	Battle against a single opponent. Destroy your rival before he crosses the finish line to win his car!
+	GameModeRampage	Do as much damage to your environment as possible within the time limit! Reach the damage target to complete the challenge!
+	GameModeElimination	Each time the timer reaches zero, the last position driver will be eliminated! Make sure it's not you!
+	GameModeGooseHunt	All weapons are stripped from your car, but not from your enemies! Win by crossing the finish line first and alive!
+	GameModeSurvivor	Destroy all rival cars before they can cross the finish line! No mercy!
+	GameModeBossBattle	Win the boss car by destroying him before he crosses the finish line! Good luck - you'll need it!
+	// Options
+	OnButton	ON
+	OffButton	OFF	
+	HighButton	HIGH
+	LowButton	LOW
+Text_End
+
+TextColor_Begin
+	Black	rgb(0, 0, 0)
+	Grey	rgb(102, 103, 107)
+	Orange	rgb(255, 150, 0)
+	White	rgb(255, 255, 255)
+	Red	rgb(255, 0, 12)
+TextColor_End
+
+ButtonNormal_Begin
+ButtonNormal_End
+
+ButtonRollover_Begin
+	Default	[]
+	BR3Rollover3DText	["YellowFont3D_Material", "YellowFont3DGlow_Material"]
+ButtonRollover_End
+
+ButtonPressed_Begin
+ButtonPressed_End
+
+ButtonSFX_Begin
+	DefaultRollover	#none
+	DefaultPressed	#none
+	Rollover	ButtonRollover_SFX
+	Pressed	ButtonPressed_SFX
+ButtonSFX_End
+
+ButtonEffects_Begin
+	Default	#none
+	OffSet	vector(0, -30, 0)
+	Scale	vector(0.3, 0.3, 0.3)
+ButtonEffects_End
+
+ButtonFilters_Begin
+	BR3Bevel	[#bevelFilter: [#blurX: 1, #blurY: 1, #quality:2, #angle: 115, #distance:-1, #strengthPercent: 30, #inner:1]]
+	BR3GlowGrey	[#glowFilter: [#BlurX:5, #BlurY:5, #quality:2, #color:color(132,132,127), #strengthPercent: 48]]
+	BR3GlowYellow	[#glowFilter: [#BlurX:5, #BlurY:5, #quality:2, #color:color(255,150,0), #strengthPercent: 48]]
+	BR3GlowRed	[#glowFilter: [#BlurX:5, #BlurY:5, #quality:2, #color:color(255,0,12), #strengthPercent: 48]]
+	BR3GlowWhite	[#glowFilter: [#BlurX:5, #BlurY:5, #quality:2, #color:color(255,255,255), #strengthPercent: 48]]
+	BR3GlowBlack	[#glowFilter: [#BlurX:5, #BlurY:5, #quality:2, #color:color(0,0,0), #strengthPercent: 48]]
+ButtonFilters_End
+
+

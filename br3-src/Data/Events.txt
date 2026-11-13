@@ -1,0 +1,841 @@
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Game Initialization
+//-------------------------------------------------------------------------------------------------------------------------------------------
+GameInitialization_Begin
+	PutMessage	GAMEINITIALIZATION!
+	SetValue	gSystem	[#debug: FALSE]
+	Load	\Data\{:Scene}\{:Scene}LoadingArray.txt	[#event: "{:Scene}Initialization"]
+	Do		BurninRubber3
+	Evaluate	{:local}=FALSE	[#event: "OnlineGameInitialization"]	
+GameInitialization_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Online Initialization
+//-------------------------------------------------------------------------------------------------------------------------------------------
+OnlineGameInitialization_Begin
+	Do		PreloadCarsAndShared
+	Event		{:Scene}Initialization
+OnlineGameInitialization_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Track(s) Initialization
+//-------------------------------------------------------------------------------------------------------------------------------------------
+TracksInitialization_Begin
+	Load	\Data\Cars\CarsLoadingArray.txt	[#cast: "Cars"]
+	Load	\Data\Shared\SharedLoadingArray.txt	[#cast: "Shared"]
+	Load	\Data\{:Scene}\{:Scene}LoadingArray.txt	[#cast: "Tracks"]
+	Event		CurrentTrackInitialization	
+TracksInitialization_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Default Event (puts message i.e. when trigger has no available event )
+//-------------------------------------------------------------------------------------------------------------------------------------------
+DefaultEvent_Begin
+	PutMessage	Default event!
+DefaultEvent_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Setup Game modes
+//-------------------------------------------------------------------------------------------------------------------------------------------
+SetupDefault_Begin
+	// Default mode for testing
+	PutMessage	Setup Default Game Mode!
+	SetValue		[#weapons: TRUE]
+	SetValue		[#AI: 0]
+	Event		AddValues
+SetupDefault_End
+
+SetupRace_Begin	
+	PutMessage	Setup Race Game Mode! Finish first!
+	SetValue		[#playerWeapons1: FALSE]
+	SetValue		[#playerWeapons2: FALSE]
+	SetValue		[#AIWeapons: FALSE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position = 1	[#event: "EndChallengeWon", #frameFreq: 5]	
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position > 1	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+SetupRace_End
+
+SetupBattleRace_Begin
+	PutMessage	Setup Battle Race Game Mode! Finish first and alive!
+	SetValue		[#playerWeapons1: TRUE]
+	SetValue		[#playerWeapons2: TRUE]
+	SetValue		[#AIWeapons: TRUE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position = 1	[#event: "EndChallengeWon", #frameFreq: 5]	
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position > 1	[#event: "EndChallengeLost", #frameFreq: 5]		
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]		
+SetupBattleRace_End
+
+SetupElimination_Begin
+	PutMessage	Setup Elimination Game Mode! Finish first or be the last one alive!
+	SetValue		[#playerWeapons1: FALSE]
+	SetValue		[#playerWeapons2: FALSE]
+	SetValue		[#AIWeapons: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position = 1	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	{:AIsKilled} = {:AIsBuild}	[#event: "DelayEndChallengeWon", #frameFreq: 5]		
+SetupElimination_End
+
+SetupSurvivor_Begin
+	PutMessage	Setup Survivor Game Mode! Kill all other AI, if one finishes you lose!
+	SetValue		[#playerWeapons1: TRUE]
+	SetValue		[#playerWeapons2: TRUE]
+	SetValue		[#AIWeapons: TRUE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	{:AIsFinished} >= 1	[#event: "EndChallengeLost", #frameFreq: 5]
+	AddTrigger	{:AIsKilled} = {:AIsBuild}	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	gGame.cars[1].race.state = #Finished;{:AIsKilled} < {:AIsBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	gGame.cars[1].race.state = #Finished;{:AIsKilled} = {:AIsBuild}	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+SetupSurvivor_End
+
+SetupGooseHunt_Begin
+	PutMessage	Setup GooseHunt Game Mode! Finish first and alive!
+	SetValue		[#playerWeapons1: FALSE]
+	SetValue		[#playerWeapons2: FALSE]
+	SetValue		[#AIWeapons: TRUE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position = 1	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.position > 1	[#event: "EndChallengeLost", #frameFreq: 5]		
+	// delay event to activate weapons		
+SetupGooseHunt_End
+
+SetupRampage_Begin
+	PutMessage	Setup Collateral Damage Game Mode! Reach the target amount of damage in a given time!
+	SetValue		[#playerWeapons1: TRUE]
+	SetValue		[#playerWeapons2: TRUE]
+	SetValue		[#AIWeapons: FALSE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 0]
+	Event		AddValues	
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.score>=gGame.prizeMoney	[#event: "EndChallengeWon", #frameFreq: 5]	
+	AddTrigger	gGame.cars[1].race.state = #Finished;gGame.cars[1].race.score<gGame.prizeMoney	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	{:Timer} <=0;gGame.cars[1].race.score>=gGame.prizeMoney	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	{:Timer} <=0;gGame.cars[1].race.score<gGame.prizeMoney	[#event: "EndChallengeLost", #frameFreq: 5]	
+	//AddTrigger	{:Timer} <=0;gGame.cars[1].race.score>=1500	[#event: "EndChallengeWon", #frameFreq: 5]
+	//AddTrigger	{:Timer} <=0;gGame.cars[1].race.score<1500	[#event: "EndChallengeLost", #frameFreq: 5]
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+SetupRampage_End
+
+SetupRivalBattle_Begin
+	PutMessage	Setup Rival Battle Game Mode! Kill all rival(s), if one or more finishes you lose!
+	SetValue		[#playerWeapons1: TRUE]
+	SetValue		[#playerWeapons2: TRUE]
+	SetValue		[#AIWeapons: TRUE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	{:AIsKilled} = {:AIsBuild}	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	{:AIsFinished} >= 1	[#event: "EndChallengeLost", #frameFreq: 5]
+	AddTrigger	gGame.cars[1].race.state = #Finished;{:AIsKilled} <> {:AIsBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+SetupRivalBattle_End
+
+SetupBossBattle_Begin
+	PutMessage	Setup Boss Battle Game Mode! Kill all boss(es), if one or more finishes you lose!
+	SetValue		[#playerWeapons1: TRUE]
+	SetValue		[#playerWeapons2: TRUE]
+	SetValue		[#AIWeapons: TRUE]
+	SetValue		[#AIWeaponsActive: FALSE]
+	SetValue		[#AI: 3]
+	Event		AddValues
+	AddTrigger	{:PlayersKilled} = {:PlayersBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+	AddTrigger	{:AIsKilled} = {:AIsBuild}	[#event: "EndChallengeWon", #frameFreq: 5]
+	AddTrigger	{:AIsFinished} >= 1	[#event: "EndChallengeLost", #frameFreq: 5]
+	AddTrigger	gGame.cars[1].race.state = #Finished;{:AIsKilled} <> {:AIsBuild}	[#event: "EndChallengeLost", #frameFreq: 5]	
+SetupBossBattle_End
+
+SetupTrackData_Begin
+	//Special one
+	AddValue		[#name: "TrackData", #value: [#name: "DefaultTrack", #GameMode: "{:GameMode}", #TargetTime: 95000, #fog: {:Fog}, #fogColor: {:FogColor}, #fogRange: {:FogRange}, #skyBox: {:SkyBox}, #AI: []]]
+	Do		CollectSetTrackData
+	SetValue		[#Fog: gGame.TrackData.fog]
+	SetValue		[#FogColor: gGame.TrackData.FogColor]
+	SetValue		[#FogRange: gGame.TrackData.FogRange]
+	SetValue		[#Skybox: gGame.TrackData.skyBox]	
+	// Standard
+	SetValue		[#TotalScore: 0]
+	SetValue		[#Score: 0]
+	SetValue		[#Items: []]
+SetupTrackData_End
+
+AddValues_Begin
+	// These will not be deleted on end (not yet, we need them for some result checking)
+	AddValue		[#name: "RaceState", #value: #Pending]
+	AddValue		[#name: "RaceResult", #value: #unkown]
+	// Misc ones
+	AddValue		[#name: "CurrentCar", #value: #none]
+	AddValue		[#name: "CurrentController", #value: #none]
+	AddValue		[#name: "PlayersBuild", #value: 0]
+	AddValue		[#name: "PlayersKilled", #value: 0]
+	AddValue		[#name: "PlayersFinished", #value: 0]
+	AddValue		[#name: "AIsBuild", #value: 0]
+	AddValue		[#name: "AIsKilled", #value: 0]
+	AddValue		[#name: "AIsFinished", #value: 0]	
+AddValues_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Setup/start Challenge event
+//-------------------------------------------------------------------------------------------------------------------------------------------
+SetupChallenge_Begin
+	BlackOut	{:World}Assets	[#cameraName: "DefaultView", #state: FALSE, #textureName: "Initializing_Texture", #multiSize: #fullScreen640]
+	SetValue		[#TargetTime: gGame.TrackData.TargetTime]
+	Evaluate	{:PauseInit} = FALSE	[#event: "SetupPause"]
+	DelayEvent		[#delay: 2000, #event: "StartCountDown"]
+	puppetTempo	32
+SetupChallenge_End
+
+StartCountDown_Begin
+	SetVisible	{:InterfaceName}	[#model: "CountDown", #state: TRUE]
+	AddTimer	CountDown	[#value: "CountDown", #time: 3000, #state: #down, #limit: 0]	
+	Event		PlayCountDownSound
+	AddTrigger	{:CountDown} <= 2000	[#event: "PlayCountDownSound"]
+	AddTrigger	{:CountDown} <= 1000	[#event: "PlayCountDownSound"]
+	AddTrigger	{:CountDown} <= 0	[#event: "StartChallenge"]	
+StartCountDown_End
+
+PlayCountDownSound_Begin
+	PlaySound	StartSound1_SFX
+PlayCountDownSound_End
+
+StartChallenge_Begin
+	RemoveValue		[#name: "CountDown"]
+	PlaySound	StartSound2_SFX
+	SetVisible	{:InterfaceName}	[#model: "Hud", #state: TRUE]
+	SetVisible	{:InterfaceName}	[#model: ["CountDown", "Status", "Elimination", "TrophyStatus", "WrongWayStatus"], #state: FALSE]
+	Event		BindKeys
+	Evaluate	{:Cheat}=TRUE	[#handler: "BindKeysCheat"]
+	Evaluate	"{:GameMode}"<>"Rampage"	[#event: "NormalTimer"]
+	Evaluate	"{:GameMode}"="Rampage"	[#event: "RampageTimer"]
+	Evaluate	"{:GameMode}"="Elimination"	[#event: "DelayStartElimination"]
+	AddToList	gSystem.HandlerList	[#value: ["UpdatePositions", 0, 5]]
+	SetValue		[#input: TRUE]
+	SetValue		[#RaceState: #Racing]
+	DelayEvent		[#delay: 1500, #event: "HideGo"]
+	PlaySound	{:World}_Music	[#loopcount: 0, #volume: 1.0, #priority: #top]
+	DelayCommand		[#delay: {:DelayAIWeapons}, #command: "SetValue", #target: "", #data: [#AIWeaponsActive: TRUE]]
+StartChallenge_End
+
+NormalTimer_Begin
+	PutMessage	NormalTimer
+	AddTimer	Timer	[#value: "Timer", #time: 0, #state: #up]
+NormalTimer_End
+
+RampageTimer_Begin
+	PutMessage	RampageTimer
+	AddTimer	Timer	[#value: "Timer", #time: {:target}, #state: #down, #limit: 0]
+	//AddTimer	Timer	[#value: "Timer", #time: 3000, #state: #down, #limit: 0]
+RampageTimer_End
+
+DelayStartElimination_Begin
+	DelayEvent		[#delay: {:DelayStartElimination}, #event: "StartElimination"]
+DelayStartElimination_End
+
+StartElimination_Begin
+	SetVisible	1PlayerInterface	[#model: "Elimination", #parent: "Hud", #state: TRUE]
+	AddTimer	Elimination	[#value: "Elimination", #time: {:EliminationTime}, #state: #down, #limit: 0]
+	AddTrigger	{:Elimination} <= 0	[#event: "EndElimination"]
+StartElimination_End
+
+EndElimination_Begin
+	SetVisible	1PlayerInterface	[#model: "Elimination", #state: FALSE]
+	RemoveValue		[#name: "Elimination"]
+	Do		KillLastPlayer	
+	DelayEvent		[#delay: {:DelayNextElimination}, #event: "StartElimination"]
+EndElimination_End
+
+HideGo_Begin
+	SetVisible	{:InterfaceName}	[#model: "CountDownGo", #state: FALSE]
+HideGo_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// End Challenge event
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// not used
+DelayEndChallengeLost_Begin
+	DelayEvent		[#delay: 4000, #event: "EndChallengeLost"]
+DelayEndChallengeLost_End
+
+EndChallengeLost_Begin
+	SetValue		[#RaceResult: #Lost]
+	Event		EndChallenge
+EndChallengeLost_End
+
+DelayEndChallengeWon_Begin
+	DelayEvent		[#delay: 4000, #event: "EndChallengeWon"]
+	SetValue	gData	[#Triggers: []]
+DelayEndChallengeWon_End
+
+EndChallengeWon_Begin
+	SetValue		[#RaceResult: #Won]
+	Event		EndChallenge
+EndChallengeWon_End
+
+EndChallenge_Begin
+	PutMessage	Challenge finished!
+	PlaySound	EndOfChallenge_SFX
+	Evaluate	gSound.Mute=FALSE	[#event: "SetMusicVolume"]
+	SetValue		[#RaceState: #Finished]
+	SetVisible	{:InterfaceName}	[#model: "Hud", #state: FALSE]
+	Do		StopAllCars	
+	Do		EvaluateResults
+	Event		RemoveValues	
+EndChallenge_End
+
+SetMusicVolume_Begin
+	SetSound	{:World}_Music	[#volume: 0.35]
+SetMusicVolume_End
+
+ShowResults_Begin
+	PutMessage	Show results!
+	Do		SaveData
+	Evaluate	#{:RaceResult}=#Won	[#event: "PlayResult"]	
+	Evaluate	{:CashInit} = FALSE	[#event: "SetupCash"]
+	SetVisible	Main	[#model: ["Completed", "Failed"], #state: FALSE]
+	Evaluate	{:ResultsInit}=FALSE	[#event: "SetupResults"]
+	Do		UpdateResultsTextures
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "2D_Camera"]	
+	SetCamera	Main	[#cameraName: "2D_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]),  #clearAtRender: FALSE]
+	SetVisible	Main	[#model: ["Results", "BlackBars", "Cash", "BackButton", "NextButton"], #state: TRUE]
+	SetVisible	Main	[#model: ["Results", "BlackLayer3D"], #parent: "World", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 90]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Results_Camera", #percentage: {:MenuIntSpeed}]
+ShowResults_End
+
+PlayResult_Begin
+	PlaySound	Result_SFX
+PlayResult_End
+
+EndRaceAndRetry_Begin
+	StopAllSound
+	Do		StoreMute
+	Evaluate	{:pause}=TRUE	[#handler: "PauseGame"]	
+	Event		RemoveValues
+	SetValue		[#RaceState: #Finished]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	ResetSprites		[#start: 1, #end: 5]
+	Event		ResetMembers
+	Do		ClearHandlerLists
+	Do		ResetGame
+	SetVisible	Main	[#model: ["Results", "BlackBars", "Cash", "BackButton", "NextButton"], #state: FALSE]
+	Do		DeleteResult3DText
+	Do		SetupTrackVariables
+	Event		TracksInitialization	
+EndRaceAndRetry_End
+
+EndRaceAndReturnToMenu_Begin
+	StopAllSound
+	Evaluate	{:pause}=TRUE	[#handler: "PauseGame"]	
+	Do		StoreMute
+	Event		RemoveValues
+	SetValue		[#RaceState: #Finished]
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	ResetSprites		[#start: 1, #end: 5]
+	Event		ResetMembers
+	Do		ClearHandlerLists
+	Do		ResetGame	
+	SetVisible	Main	[#model: ["Results", "BlackBars", "Cash", "BackButton", "NextButton"], #state: FALSE]
+	SetValue		[#subscene: "TrackSelection"]
+	Do		DeleteResult3DText
+	Event		MenuInitialization
+EndRaceAndReturnToMenu_End
+
+EndRaceAndGoToHub_Begin
+	StopAllSound
+	Event		RemoveValues
+	SetValue		[#RaceState: #Finished]
+	Evaluate	{:pause}=TRUE	[#handler: "PauseGame"]	
+	Do		StoreMute
+	DeleteScript	gSystem	[#name: "Bloom"]
+	DeleteScript	gSystem	[#name: "Motion Blur"]
+	ResetSprites		[#start: 1, #end: 5]
+	Event		ResetMembers
+	Do		ClearHandlerLists
+	Do		ResetGame	
+	StopAllSound
+	Do		DeleteResult3DText
+	SetValue		[#currentMenu: "Hub"]
+	SetValue		[#subscene: "TrackSelection"]
+EndRaceAndGoToHub_End
+
+RemoveValues_Begin
+	RemoveTimer	Timer
+	RemoveFromHandlerList	"UpdatePositions"
+	RemoveValue		[#name: "CurrentCar"]
+	RemoveValue		[#name: "CurrentController"]
+	RemoveValue		[#name: "PlayersBuild"]
+	RemoveValue		[#name: "PlayersKilled"]
+	RemoveValue		[#name: "PlayersFinished"]
+	RemoveValue		[#name: "AIsBuild"]
+	RemoveValue		[#name: "AIsKilled"]
+	RemoveValue		[#name: "AIsFinished"]	
+	// Clear stuff
+	RemoveValue		[#name: "Timer"]
+	SetValue	gData	[#Triggers: []]
+	SetValue		[#TimerList: [:]]
+	SetValue		[#BulletHits: []]
+	SetValue		[#AreaDamageList: []]
+	SetValue		[#DestructiveList: []]	
+	SetValue		[#DynamicRBList: []]
+	SetValue		[#StaticRBList: []]
+	SetValue		[#CheckpointList: [:]]
+	SetValue		[#input: FALSE]
+RemoveValues_End
+
+ResetMembers_Begin
+	ResetWorld	{:World}Assets
+	ResetWorld	Objects
+	ResetWorld	InvisibleWall
+	ResetWorld	Pickups
+	ResetWorld	Skyboxes
+ResetMembers_End
+
+// RESULTS
+SetupResults_Begin
+	// Menu?
+	Evaluate	{:MenuInit}=FALSE	[#event: "AddMenuScript"]	
+	//Tab
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsTabName, #texture: "ResultsTabName_Texture", #align: #left, #fontSize: 19, #lineSpacing: 18, #color: gData.data.textColor.black]
+	AssignTexture	Main	[#material: "ResultsTabName_Material", #texture1: "ResultsTabName_Texture"]	
+	// SendHighSCorebutton
+	CreateTextTexture	Main	[#text: gData.data.text.SendHighScore, #texture: "SendHighScoreNormal_Texture", #fontSize: 15, #width: 256, #align: #center, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.SendHighScore, #texture: "SendHighScoreRollover_Texture", #fontSize: 15, #width: 256, #align: #center, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "SendHighScore_Material", #texture1: "SendHighScoreNormal_Texture"]	
+	CreateButton	Main	[#model: "SendHighScoreButton", #handler: "SubmitHighScore", #rollover: "SendHighScoreRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// Names
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsScoreName, #texture: "ResultsScoreName_Texture", #align: #left, #fontSize: 24, #lineSpacing: 20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsScoreName_Material", #texture1: "ResultsScoreName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsTimeBonusName, #texture: "ResultsTimeBonusName_Texture", #align: #left, #fontSize: 24, #lineSpacing: 20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsTimeBonusName_Material", #texture1: "ResultsTimeBonusName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsPrizeMoneyName, #texture: "ResultsPrizeMoneyName_Texture", #align: #left, #fontSize: 24, #lineSpacing: 20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsPrizeMoneyName_Material", #texture1: "ResultsPrizeMoneyName_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsTotalScoreName, #texture: "ResultsTotalScoreName_Texture", #align: #left, #fontSize: 38, #lineSpacing: 33, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsTotalScoreName_Material", #texture1: "ResultsTotalScoreName_Texture"]	
+	// scores
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsScore, #texture: "ResultsScore_Texture", #align: #right, #fontSize: 24, #lineSpacing:20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsScore_Material", #texture1: "ResultsScore_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsTimeBonus, #texture: "ResultsTimeBonus_Texture", #align: #right, #fontSize: 24, #lineSpacing: 20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsTimeBonus_Material", #texture1: "ResultsTimeBonus_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsPrizeMoney, #texture: "ResultsPrizeMoney_Texture", #align: #right, #fontSize: 24, #lineSpacing:20, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsPrizeMoney_Material", #texture1: "ResultsPrizeMoney_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.ResultsTotalScore, #texture: "ResultsTotalScore_Texture", #align: #right, #fontSize: 38, #lineSpacing: 33, #resize: TRUE, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ResultsTotalScore_Material", #texture1: "ResultsTotalScore_Texture"]	
+	// Rewards
+	CreateTextTexture	Main	[#text: gData.data.text.NewItems, #texture: "NewItems_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.white, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "NewItems_Material", #texture1: "NewItems_Texture"]	
+	CreateTextTexture	Main	[#text: gData.data.text.Reward1, #texture: "NewUnlocked1_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "NewUnlocked1_Material", #texture1: "NewUnlocked1_Texture"]
+	CreateTextTexture	Main	[#text: gData.data.text.Reward2, #texture: "NewUnlocked2_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "NewUnlocked2_Material", #texture1: "NewUnlocked2_Texture"]
+	CreateTextTexture	Main	[#text: gData.data.text.Reward3, #texture: "NewUnlocked3_Texture", #fontSize: 15, #width: 512, #color: gData.data.textColor.black, #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "NewUnlocked3_Material", #texture1: "NewUnlocked3_Texture"]	
+	// Back/next button?
+	CreateTextTexture	Main	[#text: gData.data.text.retryButton, #texture: "BackButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.retryButton, #texture: "BackButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "BackButton_Material", #texture1: "BackButtonNormal_Texture"]
+	CreateButton	Main	[#model: "BackButton", #event: "EndRaceAndRetry", #rollover: "BackButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonNormal_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey]]
+	CreateTextTexture	Main	[#text: gData.data.text.nextButton, #texture: "NextButtonRollover_Texture", #fontSize: 26, #lineSpacing: 18, #align: #right, #color: gData.data.textColor.orange, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowYellow]]
+	AssignTexture	Main	[#material: "NextButton_Material", #texture1: "NextButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "NextButton", #event: "EndRaceAndReturnToMenu", #rollover: "NextButtonRollover_Texture", #alpha: TRUE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+SetupResults_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Failed/Completed events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+DelayFailedChallenge_Begin
+	DelayEvent		[#delay: 4000, #event: "FailedChallenge"]	
+DelayFailedChallenge_End
+
+FailedChallenge_Begin
+	PlaySound	ChallengeFailed_SFX
+	Evaluate	{:FailedInit}=FALSE	[#event: "SetupFailedChallenge"]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "3D_Camera"]
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "2D_Camera"]
+	SetCamera	Main	[#cameraName: "3D_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]),  #clearAtRender: FALSE]
+	SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Failed_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#model: "Failed", #parent: "World", #state: TRUE]
+	SetVisible	Main	[#model: "BlackBars", #state: TRUE]
+	SetVisible	Main	[#model: "BlackLayer3D", #parent: "World", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 90]
+	DelayEvent		[#delay: 2000, #event: "ShowResults"]
+FailedChallenge_End
+
+SetupFailedChallenge_Begin
+	Evaluate	{:Font3DInit}=FALSE	[#event: "SetupFont3D"]
+	Create3DText	Main	[#text: "challenge ", #Size: 55, #alignH: #left, #alignV: #top, #alignVRef: "Failed", #parent: "Failed", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	Create3DText	Main	[#text: "failed ", #Size: 95, #alignH: #left, #alignV: #top, #alignVRef: "Failed", #parent: "Failed", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	SetVisible	Main	[#model: ["Menu", "Interface"], #state: FALSE]	
+	SetPosDir	Main	[#object: "challenge ", #positionOffset: vector(0, 0, 45.0)]
+	SetValue		[#FailedInit: TRUE]
+SetupFailedChallenge_End
+
+DelayCompletedChallenge_Begin
+	DelayEvent		[#delay: 4000, #event: "CompletedChallenge"]	
+DelayCompletedChallenge_End
+
+CompletedChallenge_Begin
+	PlaySound	ChallengeCompleted_SFX
+	Evaluate	{:CompletedInit}=FALSE	[#event: "SetupCompletedChallenge"]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "3D_Camera"]
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "2D_Camera"]
+	SetCamera	Main	[#cameraName: "3D_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]),  #clearAtRender: FALSE]
+	SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Completed_Camera", #percentage: {:MenuIntSpeed}]
+	SetVisible	Main	[#model: "Completed", #parent: "World", #state: TRUE]
+	SetVisible	Main	[#model: "BlackBars", #state: TRUE]
+	SetVisible	Main	[#model: "BlackLayer3D", #parent: "World", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 90]
+	DelayEvent		[#delay: 2000, #event: "ShowResults"]
+CompletedChallenge_End
+
+SetupCompletedChallenge_Begin
+	Evaluate	{:Font3DInit}=FALSE	[#event: "SetupFont3D"]
+	Create3DText	Main	[#text: "challenge  ", #Size: 55, #alignH: #left, #alignV: #top, #alignVRef: "Completed", #parent: "Completed", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	Create3DText	Main	[#text: "completed ", #Size: 54, #alignH: #left, #alignV: #top, #alignVRef: "Completed", #parent: "Completed", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	SetVisible	Main	[#model: ["Menu", "Interface"], #state: FALSE]	
+	SetPosDir	Main	[#object: "challenge  ", #positionOffset: vector(0, 0, 42.0)]
+	SetValue		[#CompletedInit: TRUE]	
+SetupCompletedChallenge_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Player events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+FinishCar_Begin
+	PutMessage	{:CurrentController} Finished!
+	SetValue	gGame.cars.{:currentCar}.race	[#state: #Finished]
+	SetValue	gGame.cars.{:currentCar}.race	[#time: {:Timer}]
+	MiniCalculator		[#value: #{:CurrentController}sFinished, #add: 1]
+	Do		ResetStates
+FinishCar_End
+
+KillCar_Begin
+	PutMessage	{:CurrentController} killed!
+	SetValue	gGame.cars.{:currentCar}.race	[#state: #Dead]
+	MiniCalculator		[#value: #{:CurrentController}sKilled, #add: 1]
+	Evaluate	#{:CurrentController}=#AI	[#Event: "ShowRivalDownStatus"]
+	Do		ResetStates
+KillCar_End
+
+Checkpoint_Begin
+	PutMessage	Checkpoint!
+	MiniCalculator	gGame.cars.{:currentCar}.race	[#value: #Checkpoints, #add: 1]	
+Checkpoint_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Pickup events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+NitroPickup_Begin
+	PutMessage	NITRO!
+	PlaySound	PickUpGeneric	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200]]
+	PlaySound	NitroStart	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200]]
+	SetValue	gGame.cars[#{:CurrentCar}].car	[#nitro: TRUE]
+	CreateTimeOut	{:CurrentCar}NitroOff	[#period: {:NitroDuration}, #handler: #NitroOff, #List: [#{:CurrentCar}]]
+	Event		ShowNitroStatus	
+NitroPickup_End
+
+RepairPickup_Begin
+	PutMessage	REPAIR!
+	PlaySound	PickUpCarRepair	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200]]
+	SetValue	gGame.cars[#{:CurrentCar}].car	[#health: gGame.cars[#{:CurrentCar}].general.data.personality.health]
+	Event		ShowRepairStatus
+RepairPickup_End
+
+DetonatorPickup_Begin	
+	PutMessage	DETONATOR!
+	PlaySound	PickUpGeneric	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200]]
+	Event		ShowDetonatorStatus
+	Event		ImpactTimeOn
+DetonatorPickup_End
+
+HiddenPackagePickup_Begin
+	PutMessage	HIDDENPACKAGE!
+	PlaySound	PickUpGeneric	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200]]
+	Do		CollectHiddenPackage
+	Event		ShowHiddenPackageStatus
+HiddenPackagePickup_End
+
+CashSmallPickup_Begin
+	PutMessage	CASHSMALL!
+	PlaySound	PickUpCash	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200], #override: TRUE]
+	MiniCalculator	gGame.cars[#{:currentCar}].race	[#value: #Score, #add: {:CashSmall}]
+	MiniCalculator	gGame.cars[#{:currentCar}].race	[#value: #addScore, #add: {:CashSmall}]
+	Event		ShowCashSmallStatus
+CashSmallPickup_End
+
+CashBigPickup_Begin
+	PutMessage	CASHBIG!
+	PlaySound	PickUpCash	[#surround: TRUE, #member3DName: "{:World}Assets", #sender: "{:CurrentCar}", #static: TRUE, #targetName: "{:CurrentCar}", #referenceName: "Player1_Camera", #distance: [30, 200], #override: TRUE]
+	MiniCalculator	gGame.cars[#{:currentCar}].race	[#value: #Score, #add: {:CashBig}]
+	MiniCalculator	gGame.cars[#{:currentCar}].race	[#value: #addScore, #add: {:CashBig}]
+	Event		ShowCashBigStatus
+CashBigPickup_End
+
+MonkeyPickup_Begin
+	PutMessage	MONKEY!
+	PlaySound	BaboonHit_SFX
+	Do		MonkeyBusiness
+	//Event		ShowMonkeyStatus
+MonkeyPickup_End
+
+PigPickup_Begin
+	PutMessage	PIG!
+	PlaySound	PigHit_SFX
+	Do		PigsFTW
+	//Event		ShowPigStatus
+PigPickup_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Status events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+ShowNitroStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusNitro"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.NitroHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.NitroText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowNitroStatus_End
+
+ShowRepairStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusRepair"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.repairHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.repairText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowRepairStatus_End
+
+ShowDetonatorStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusDetonator"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.DetonatorHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.DetonatorText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowDetonatorStatus_End
+
+ShowHiddenPackageStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusHiddenPackage"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.HiddenPackageHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.HiddenPackageText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowHiddenPackageStatus_End
+
+ShowCashSmallStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusCashSmall"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.CashSmallHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.CashSmallText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowCashSmallStatus_End
+
+ShowCashBigStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusCashBig"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.CashBigHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.CashBigText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowCashBigStatus_End
+
+ShowRivalDownStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusRivalDown"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.RivalDownHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.RivalDownText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowRivalDownStatus_End
+
+ShowMonkeyStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusMonkey"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.MonkeyHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.MonkeyText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowMonkeyStatus_End
+
+ShowPigStatus_Begin
+	SetModel	{:InterfaceName}	[#model: "StatusIcon", #resource: "StatusPig"]		
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: TRUE]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.PigHeader, #texture: "StatusHeader_Texture", #fontSize: 15, #align: #left, #color: rgb(255, 255, 255)]
+	CreateTextTexture	1PlayerInterface	[#text: gData.data.text.PigText, #texture: "StatusText_Texture", #fontSize: 14, #height: 32, #width: 170, #wrap: TRUE, #align: #left, #color: rgb(0, 0, 0), #forceSize: [256, 32]]
+	DelayEvent		[#delay: {:StatusDuration}, #event: "HideStatus"]	
+ShowPigStatus_End
+
+HideStatus_Begin
+	SetVisible	{:InterfaceName}	[#model: "Status", #state: FALSE]
+HideStatus_End
+
+HideTrophyStatus_Begin
+	SetVisible	{:InterfaceName}	[#model: "TrophyStatus", #state: FALSE]	
+HideTrophyStatus_End
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Interface events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+BindKeys_Begin
+	BindKey		[#key: "q", #handler: "PauseGame", #once: FALSE]
+	BindKey		[#key: "p", #handler: "PauseGame", #once: FALSE]
+	BindKey		[#key: "m", #handler: "MuteGame", #once: FALSE]
+	BindKey		[#key: "g", #handler: "ForceToggleJoystick", #once: FALSE]
+	BindKey		[#key: 53, #handler: "PauseGame", #once: FALSE]		
+BindKeys_End
+
+BindKeysCheat_Begin
+	// Cheats/Debug
+	BindKey		[#key: "k", #Event: "EndChallengeWon", #once: TRUE]
+	BindKey		[#key: "l", #Event: "EndChallengeLost", #once: TRUE]
+	BindKey		[#key: "-", #event: "SlowMoOn", #once: FALSE]
+	BindKey		[#key: "=", #event: "SlowMoOff", #once: FALSE]
+BindKeysCheat_End
+
+UnbindKeys_Begin
+	UnbindKey		[#key: "p"]
+	UnbindKey		[#key: "m"]
+	UnbindKey		[#key: "g"]
+	UnbindKey		[#key: 53]
+	// Cheats/Debug
+	UnbindKey		[#key: "-"]
+	UnbindKey		[#key: "="]
+UnbindKeys_End
+
+BloomOn_Begin
+	UnbindKey		[#key: "b"]
+	SetValue		[#Bloom: TRUE]
+	AddScript	{:World}Assets	[#script: "[PS] Bloom", #data: [#targetCameraName: "Player1_Camera", #size: 0.0625, #template: #{:World}Track{:Track}]]
+	puppetTempo	32
+BloomOn_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Pause
+//-------------------------------------------------------------------------------------------------------------------------------------------
+PauseGame_Begin
+	Evaluate	{:PauseInit} = FALSE	[#event: "SetupPause"]
+	SetVisible	{:InterfaceName}	[#model: "Hud", #state: FALSE]	
+	SetVisible	Main	[#model: "Pause", #state: TRUE]
+	SetVisible	Main	[#model: "BlackLayer3D", #parent: "World", #state: TRUE]
+	SetShader	Main	[#shader: "BlackLayer3D_Material", #blend: 90]
+	AddCameraToSprite	{:Sprite}	[#member: "Main", #camera: "3D_Camera"]
+	SetCamera	Main	[#cameraName: "3D_Camera", #rect: rect(0, 0, {:Resolution}[1], {:Resolution}[2]),  #clearAtRender: FALSE]
+	SetPosDir	Main	[#object: "3D_Camera", #position: "Main3D_Camera", #rotation: "Main3D_Camera"]
+	AddToInterpolator	Main	[#object: "3D_Camera", #target: "Pause_Camera", #percentage: {:MenuIntSpeed}]
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "2D_Camera"]
+PauseGame_End
+
+UnPauseGame_Begin
+	RemoveCameraFromSprite	{:Sprite}	[#camera: "3D_Camera"]
+	SetVisible	{:InterfaceName}	[#model: "Hud", #state: TRUE]
+	SetVisible	Main	[#model: ["Pause", "BlackBars", "BlackLayer3D"], #state: FALSE]
+UnPauseGame_End
+
+SetupPause_Begin
+	// temp?
+	Evaluate	{:MenuInit}=FALSE	[#event: "AddMenuScript"]	
+	// 3d text
+	Create3DText	Main	[#text: "pause ", #Size: 68, #alignH: #left, #alignV: #top, #alignVRef: "Pause", #parent: "Pause", #shader: "WhiteFont3D_Material", #glow: TRUE, #glowShader: "WhiteFont3DGlow_Material", #offset: vector(0, 0, 0)])
+	SetPosDir	Main	[#object: "pause ", #positionOffset: vector(0, 0, 48.0)]
+	// Continue Button
+	SetVisible	Main	[#model: ["Menu", "Interface"], #state: FALSE]	
+	CreateTextTexture	Main	[#text: gData.data.text.PauseContinue, #texture: "ContinueButtonNormal_Texture", #fontSize: 15, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.PauseContinue, #texture: "ContinueButtonRollover_Texture", #fontSize: 15,#color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "ContinueButton_Material", #texture1: "ContinueButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "ContinueButton", #handler: "PauseGame", #rollover: "ContinueButtonRollover_Texture", #alpha: FALSE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// retry button
+	CreateTextTexture	Main	[#text: gData.data.text.PauseRetry, #texture: "RetryButtonNormal_Texture", #fontSize: 15, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.PauseRetry, #texture: "RetryButtonRollover_Texture", #fontSize: 15,#color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "RetryButton_Material", #texture1: "RetryButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "RetryButton", #event: "EndRaceAndRetry", #rollover: "RetryButtonRollover_Texture", #alpha: FALSE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]
+	// quit button
+	CreateTextTexture	Main	[#text: gData.data.text.PauseQuit, #texture: "QuitButtonNormal_Texture", #fontSize: 15, #color: gData.data.textColor.grey, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowGrey], #nearFiltering: TRUE]
+	CreateTextTexture	Main	[#text: gData.data.text.PauseQuit, #texture: "QuitButtonRollover_Texture", #fontSize: 15,#color: gData.data.textColor.white, #filters: [gData.data.buttonFilters.BR3Bevel, gData.data.buttonFilters.BR3GlowWhite], #nearFiltering: TRUE]
+	AssignTexture	Main	[#material: "QuitButton_Material", #texture1: "QuitButtonNormal_Texture"]	
+	CreateButton	Main	[#model: "QuitButton", #event: "EndRaceAndReturnToMenu", #rollover: "QuitButtonRollover_Texture", #alpha: FALSE, #rollover_sfx: "ButtonRollover_SFX", #pressed_sfx: "ButtonPressed_SFX"]	
+	SetValue		[#PauseInit: TRUE]
+SetupPause_End
+
+AddMenuScript_Begin
+	// Font?
+	Evaluate	{:Font3DInit}=FALSE	[#event: "SetupFont3D"]
+	// add the button script
+	AddScript	Main	[#script: "[PS] Burnin3 Menu", #data: [#member: "Main", #camera: ["3D_Camera", "2D_Camera"]]]
+AddMenuScript_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Slowmo events
+//-------------------------------------------------------------------------------------------------------------------------------------------
+ImpactTimeOn_Begin
+	ManipulateTime		[#targetTime: 0.1, #defaultStep: 0.2]
+	SetValue		[#SlowMo: TRUE]
+	SetValue	Sound	[#GeneralVolume: 0.5]
+	SetValue	gGame.Camera[1]	[#offset: vector(0.0, -15.0, 5.0)]
+	SetValue	gGame.Camera[1]	[#rotation: vector(75.0, 0.0, 0.0)]		
+	DelayEvent		[#delay: 5000, #event: "ImpactTimeOff"]
+	CreateTimeOut	DeFreezeIn	[#period: 33, #handler: #DeFreezeIn]
+ImpactTimeOn_End
+
+ImpactTimeOff_Begin
+	ManipulateTime
+	SetValue	Sound	[#GeneralVolume: 1.0]	
+	SetValue		[#SlowMo: FALSE]
+	SetValue	gGame.Camera[1]	[#offset: vector(0.0, -5.5, 1.55)]
+	SetValue	gGame.Camera[1]	[#rotation: vector(82.0, 0.0, 0.0)]	
+	Evaluate	"{:Car}"="BlackTruck"	[#event: "BlackTruckCamera"]
+	Evaluate	"{:Car}"="Tank"	[#event: "TankCamera"]	
+	Evaluate	"{:Car}"="Apache"	[#event: "ApacheCamera"]	
+	CreateTimeOut	DeFreezeOut	[#period: 33, #handler: #DeFreezeOut]
+ImpactTimeOff_End
+
+SlowMoOn_Begin
+	ManipulateTime		[#targetTime: 0.1, #defaultStep: 0.2]
+SlowMoOn_End
+
+SlowMoOff_Begin
+	ManipulateTime
+SlowMoOff_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Camera events for blacktruck & tank
+//-------------------------------------------------------------------------------------------------------------------------------------------
+BlackTruckCamera_Begin
+	PutMessage	BlackTruck camera
+	SetValue	gGame.Camera[1]	[#offset: vector(0.0, -8.5, 2.0)]
+	SetValue	gGame.Camera[1]	[#rotation: vector(78.0, 0.0, 0.0)]	
+BlackTruckCamera_End
+
+TankCamera_Begin
+	SetValue	gGame.Camera[1]	[#offset: vector(0.0, -8.5, 2.5)]
+	SetValue	gGame.Camera[1]	[#rotation: vector(78.0, 0.0, 0.0)]	
+TankCamera_End
+
+ApacheCamera_Begin
+	SetValue	gGame.Camera[1]	[#offset: vector(0.0, -7.5, 2.55)]
+	SetValue	gGame.Camera[1]	[#rotation: vector(75.0, 0.0, 0.0)]	
+ApacheCamera_End
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+// Cheats
+//-------------------------------------------------------------------------------------------------------------------------------------------
+CheatIt_Begin
+	AlertMessage	YOU ARE NOW OFFICIALY A CHEATER!
+	SetValue		[#CarsList: [#bmw: #unlocked, #DodgeRam: #unlocked, #marcos: #unlocked, #miniCooper: #unlocked, #AstonMartin: #unlocked, #AudiR8: #unlocked, #Corvette: #unlocked,  #Eclipse: #unlocked, #FordGT: #unlocked, #Mustang: #unlocked, #Nissan: #unlocked, #Porsche: #unlocked, #seat: #unlocked, #BlackTruck: #unlocked, #tank: #unlocked, #apache: #unlocked]]
+	SetValue		[#UpgradesList: [#engine: #unlocked, #armor: #unlocked, #handling: #unlocked, #primary: #unlocked, #secondary: #unlocked]]
+	SetValue		[#BodykitList: [#BMW:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#AstonMartin:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#AudiR8:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#FordGT:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Corvette:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Eclipse:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Mustang:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Nissan:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Porsche:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked],#Seat:[#skin2: #unlocked, #frontBumper2: #unlocked, #rearBumper2: #unlocked, #rims2: #unlocked, #spoiler: #unlocked]]]
+	SetValue		[#PrimaryWeaponsList: [#noPrimary: #unlocked, #machinegun: #unlocked, #dualMachineGun: #unlocked, #minigun: #unlocked, #dualMiniGun: #unlocked]]
+	SetValue		[#SecondaryWeaponsList: [#noSecondary: #unlocked, #rocketPod: #unlocked, #mineDeployer: #unlocked, #grenadeDeployer: #unlocked, #grenadeLauncher: #unlocked]]
+	SetValue		[#Cash: 1000000]
+	SetValue		[#Cheat: TRUE]
+CheatIt_End
+
+

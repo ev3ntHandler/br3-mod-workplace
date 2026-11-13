@@ -1,0 +1,24 @@
+//--------------------------------------------------------------------
+// General data on triggers, events, etc. After race or during race
+//--------------------------------------------------------------------
+ResultConditions_Begin
+	TimeBeat	Condition
+	AllAIKilled	Condition
+	Time90	Condition
+ResultConditions_Begin
+
+StandardConditions_Begin
+	NearGasStation	Condition
+StandardConditions_End
+
+ResultEvents_Begin
+	UnlockPorsche
+	UnlockBMW
+	ExplodeGasStation
+ResultEvents_Begin
+
+StandardEvents_Begin
+	ExplodeGasStation
+StandardEvents_End
+
+

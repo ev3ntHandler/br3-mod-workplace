@@ -1,0 +1,38 @@
+SetupWeapons_Begin
+	CreateTexture	Weapons	[#filename: "Weapons_Texture"]
+	CreateTexture	Weapons	[#filename: "RocketFlame_Texture"]
+	CreateTexture	Weapons	[#filename: "Effects_Texture"]
+	BlendShader	Weapons	[#materialName: "Effects_Material", #blendMode: #add]
+SetupWeapons_End
+
+SetupDebris_Begin
+	CreateTexture	Debris	[#filename: "Debris_Texture"]
+SetupDebris_End
+
+SetupObjects_Begin
+	CreateTexture	Objects	[#filename: "Misc_Texture"]
+	CreateTexture	Objects	[#filename: "Arrows_Texture", #renderFormat: #rgba8888]
+	CreateTexture	Objects	[#filename: "Crosses_Texture", #renderFormat: #rgba8888]
+SetupObjects_End
+
+SetupPickups_Begin
+	CreateTexture	Pickups	[#filename: "Pickups_Texture", #renderFormat: #rgba8888]
+SetupPickups_End
+
+SetupNitro_Begin
+	CreateTexture	Nitro	[#filename: "Nitro_Texture", #renderFormat: #rgba8888]
+	BlendShader	Nitro	[#materialName: "Nitro_Material", #blendMode: #add]
+SetupNitro_End
+
+SetupInvisibleWall_Begin
+	CreateTexture	InvisibleWall	[#filename: "InvisibleWall_Texture"]
+SetupInvisibleWall_End
+
+SetupFinish_Begin
+	CreateTexture	Finish	[#filename: "Finish_Texture"]
+SetupFinish_End
+
+Setup3DParticles_Begin
+	CreateTexture	Particles	[#filename: "ParticleExplosion1_Texture"]
+	CreateTexture	Particles	[#filename: "ParticleSmoke1_Texture"]
+Setup3DParticles_End

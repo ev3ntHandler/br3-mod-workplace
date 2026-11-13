@@ -1,0 +1,3 @@
+\Data\Cars\3d\	[#cast: "Cars"]
+\Data\Cars\SkinTextures\	[#cast: "Cars"]
+\Data\Cars\ShadowTextures\	[#cast: "Cars"]
