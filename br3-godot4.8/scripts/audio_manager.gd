@@ -27,7 +27,7 @@ func _process(_delta: float) -> void:
 		if not is_instance_valid(p) or not p.playing:
 			if is_instance_valid(p):
 				p.queue_free()
-			sfx_players.remove(i)
+			sfx_players.pop_at(i)
 
 func play(name: String) -> void:
 	if not sound_enabled or name.is_empty():
@@ -86,7 +86,7 @@ func _sfx_path(name: String) -> String:
 		"challenge_complete": "ChallengeCompleted",
 		"challenge_failed": "ChallengeFailed",
 	}
-	var base := map.get(name, name)
+	var base: String = map.get(name, name)
 	# original assets use mixed naming: some have "_SFX" suffix, some don't
 	if ResourceLoader.exists(SFX_ROOT + base + "_SFX.wav"):
 		return SFX_ROOT + base + "_SFX.wav"

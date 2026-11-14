@@ -44,7 +44,7 @@ var damage_dealt: float = 0.0
 var kills: int = 0
 var wrecked: bool = false
 
-var path: Array = []  # global AI path (Vector3 list)
+var path: Array[Vector3] = []  # global AI path (Vector3 list)
 var ai_index: int = 0
 var ai_speed_target: float = 55.0
 var ai_aggro: float = 0.5
@@ -143,9 +143,9 @@ func apply_input(forward: float, back: float, left: float, right: float, brake: 
 	# braking / reverse
 	if brake:
 		if speed > 0.0:
-			speed = max(0.0, speed - brake * get_process_delta_time())
+			speed = max(0.0, speed - self.brake * get_process_delta_time())
 		else:
-			speed = max(reverse_max, speed - brake * get_process_delta_time())
+			speed = max(reverse_max, speed - self.brake * get_process_delta_time())
 	# nitro
 	if nitro and nitro_timer > 0.0:
 		nitro_active = true
@@ -166,7 +166,7 @@ func update_physics(delta: float) -> void:
 		velocity = Vector3.ZERO
 		return
 	# forward vector (car forward is -Z in local space)
-	var forward_vec := Vector3(0.0, 0.0, -1.0).rotated(Vector3(0.0, heading, 0.0))
+	var forward_vec := Vector3(0.0, 0.0, -1.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
 	# apply movement
 	var move := forward_vec * speed * delta
 	global_position += move
@@ -188,10 +188,10 @@ func update_physics(delta: float) -> void:
 		wrecked_signal.emit()
 
 func get_forward() -> Vector3:
-	return Vector3(0.0, 0.0, -1.0).rotated(Vector3(0.0, heading, 0.0))
+	return Vector3(0.0, 0.0, -1.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
 
 func get_right() -> Vector3:
-	return Vector3(1.0, 0.0, 0.0).rotated(Vector3(0.0, heading, 0.0))
+	return Vector3(1.0, 0.0, 0.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
 
 func apply_road_constraint(path: Array, delta: float) -> void:
 	if path.is_empty() or finished or wrecked:
@@ -230,16 +230,16 @@ func take_damage(amount: float, from_faction: int) -> void:
 	if health <= 0.0:
 		health = 0.0
 
-func fire_primary(targets: Array) -> bool:
+func fire_primary(targets: Array[Car]) -> bool:
 	if primary_weapon == "NoPrimary" or primary_ammo <= 0 or primary_cooldown > 0.0 or finished or wrecked:
 		return false
-	var data := GameData.weapons.get(primary_weapon, {})
+	var data: Dictionary = GameData.weapons.get(primary_weapon, {})
 	var rof: float = float(data.get("rof", 8))
 	primary_cooldown = 1.0 / rof
 	primary_ammo -= 1
 	# hitscan: find nearest target in front
 	var fwd := get_forward()
-	var best: Node3D = null
+	var best: Car = null
 	var best_dist := 200.0
 	for t in targets:
 		if t is Car and not t.wrecked and t.faction != faction:
@@ -256,10 +256,10 @@ func fire_primary(targets: Array) -> bool:
 		damage_dealt += dmg
 	return true
 
-func fire_secondary(targets: Array, race: Node) -> bool:
+func fire_secondary(targets: Array[Car], race: Node) -> bool:
 	if secondary_weapon == "NoSecondary" or secondary_ammo <= 0 or secondary_cooldown > 0.0 or finished or wrecked:
 		return false
-	var data := GameData.weapons.get(secondary_weapon, {})
+	var data: Dictionary = GameData.weapons.get(secondary_weapon, {})
 	var rof: float = float(data.get("rof", 1))
 	secondary_cooldown = 1.0 / rof
 	secondary_ammo -= 1
@@ -281,7 +281,7 @@ func fire_secondary(targets: Array, race: Node) -> bool:
 		race.spawn_explosion(global_position + fwd * 10.0)
 	return true
 
-func update_ai(delta: float, targets: Array, race: Node) -> void:
+func update_ai(delta: float, targets: Array[Car], race: Node) -> void:
 	if finished or wrecked or path.is_empty():
 		return
 	# find next waypoint

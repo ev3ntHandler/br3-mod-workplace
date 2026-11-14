@@ -113,7 +113,7 @@ func load_save() -> void:
 	var s := f.get_as_text()
 	if s.is_empty():
 		return
-	var data := JSON.parse_string(s)
+	var data: Variant = JSON.parse_string(s)
 	if data is Dictionary:
 		cash = int(data.get("cash", 10000))
 		owned_cars = data.get("owned_cars", ["BMW"])

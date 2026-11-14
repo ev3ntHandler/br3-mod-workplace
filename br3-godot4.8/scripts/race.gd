@@ -21,8 +21,8 @@ var track_num: String = ""
 var track_data: Dictionary = {}
 var track_info: Dictionary = {}
 var ai_paths: Dictionary = {}
-var global_path: Array = []
-var cars: Array = []
+var global_path: Array[Vector3] = []
+var cars: Array[Car] = []
 var player: Car
 var pickups: Array = []
 var traffic: Array = []
@@ -104,11 +104,11 @@ func _clear_scene() -> void:
 
 func _setup_environment() -> void:
 	# lighting
-	var dir := DirectionalLight.new()
+	var dir := DirectionalLight3D.new()
 	dir.transform.rotation = Vector3(PI / 4, 0.3, 0.0)
 	dir.light_energy = 1.2
 	add_child(dir)
-	var amb := AmbientLight.new()
+	var amb := AmbientLight3D.new()
 	amb.light_energy = 0.5
 	add_child(amb)
 	# environment with fog
@@ -116,12 +116,11 @@ func _setup_environment() -> void:
 	if track_data.get("Fog", false):
 		env.fog_enabled = true
 		env.fog_light_color = Color(track_data.get("FogColor", [156,153,116]))
-		var fog_arr := track_data.get("FogRange", [25, 600])
+		var fog_arr: Array = track_data.get("FogRange", [25, 600])
 		env.fog_depth_near = float(fog_arr[0])
 		env.fog_depth_far = float(fog_arr[1])
-	var bg := Background.new()
-	bg.color = Color(0.4, 0.5, 0.6)
-	env.background = bg
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.4, 0.5, 0.6)
 	var world_env := WorldEnvironment.new()
 	world_env.environment = env
 	add_child(world_env)
@@ -183,7 +182,7 @@ func _build_track() -> void:
 	add_child(world_node)
 	var assets_path := "res://assets/Tracks/" + world + "/3d/" + world + "Assets.fbx"
 	var tex_dir := "res://assets/Tracks/" + world + "/Textures/"
-	var build: Array = track_data.get("build", [])
+	var build: Array[Dictionary] = track_data.get("build", [])
 	for tile in build:
 		var type: String = tile.get("type", "")
 		if type.is_empty():
@@ -257,7 +256,7 @@ func _get_standard_mat(tex_path: String, roughness: float) -> StandardMaterial3D
 func _build_ai_path() -> void:
 	global_path.clear()
 	path_points.clear()
-	var build: Array = track_data.get("build", [])
+	var build: Array[Dictionary] = track_data.get("build", [])
 	var switch_list := {
 		"SouthNorth": "NorthSouth", "NorthSouth": "SouthNorth",
 		"WestEast": "EastWest", "EastWest": "WestEast",
@@ -267,7 +266,7 @@ func _build_ai_path() -> void:
 		"EastNorth": "NorthEast", "NorthEast": "EastNorth",
 	}
 	for tile in build:
-		var aipath_val := tile.get("aipath", tile.get("type", ""))
+		var aipath_val: Variant = tile.get("aipath", tile.get("type", ""))
 		# aipath may be an array of symbols or a single string
 		var aipath: String = ""
 		if aipath_val is Array and not aipath_val.is_empty():
@@ -295,7 +294,7 @@ func _build_ai_path() -> void:
 				global_path.append(to_godot(pos + wp))
 	# deduplicate consecutive near points
 	if global_path.size() > 1:
-		var cleaned: Array = []
+		var cleaned: Array[Vector3] = []
 		cleaned.append(global_path[0])
 		for i in range(1, global_path.size()):
 			if global_path[i].distance_to(cleaned[-1]) > 1.0:
@@ -306,9 +305,9 @@ func _build_ai_path() -> void:
 # ---------------------------------------------------------------- cars
 func _spawn_cars(car_name: String) -> void:
 	# player
-	var pdata := track_data.get("player_car", {})
+	var pdata: Dictionary = track_data.get("player_car", {})
 	var ppos := to_godot(pdata.get("position", Vector3.ZERO))
-	var pori := pdata.get("orientation", [0,0,0,1])
+	var pori: Array = pdata.get("orientation", [0,0,0,1])
 	player = Car.new()
 	player.setup(car_name, 1, true, false)
 	player.path = global_path
@@ -319,7 +318,7 @@ func _spawn_cars(car_name: String) -> void:
 	cars.append(player)
 	add_child(player)
 	# AI cars
-	var ai_list: Array = track_data.get("ai_cars", [])
+	var ai_list: Array[Dictionary] = track_data.get("ai_cars", [])
 	var ai_names := ["Nissan", "Eclipse", "Corvette", "Mustang", "Porsche", "AstonMartin", "AudiR8", "FordGT", "Seat"]
 	var ai_idx := 0
 	for adata in ai_list:
@@ -330,7 +329,7 @@ func _spawn_cars(car_name: String) -> void:
 		ai_idx += 1
 		var apos := to_godot(adata.get("position", Vector3.ZERO))
 		var aori := adata.get("orientation", [0,0,0,1])
-		var ai := Car.new()
+		var ai: Car = Car.new()
 		ai.setup(aname.replace("Boss", ""), 1, false, is_boss_car)
 		ai.is_ai = true
 		ai.path = global_path
@@ -345,7 +344,7 @@ func _spawn_cars(car_name: String) -> void:
 		add_child(ai)
 
 func _place_pickups() -> void:
-	var build: Array = track_data.get("build", [])
+	var build: Array[Dictionary] = track_data.get("build", [])
 	var pickup_ps := _get_fbx("res://assets/Shared/3d/PickUps.fbx")
 	if pickup_ps == null:
 		return
@@ -368,7 +367,7 @@ func _place_pickups() -> void:
 					add_child(node)
 
 func _place_traffic() -> void:
-	var build: Array = track_data.get("build", [])
+	var build: Array[Dictionary] = track_data.get("build", [])
 	var car_names := ["Lupo", "Truck", "Bus", "Transporter", "Nissan", "Eclipse", "Corvette", "Mustang", "Porsche"]
 	for tile in build:
 		for key in tile.keys():
@@ -388,7 +387,7 @@ func _place_traffic() -> void:
 				if not (entry is Dictionary):
 					continue
 				var pos := to_godot(entry.get("position", Vector3.ZERO))
-				var t := Car.new()
+				var t: Car = Car.new()
 				t.setup(car_base, 1, false, false)
 				t.is_traffic = true
 				t.is_ai = true
@@ -450,12 +449,12 @@ func _setup_camera() -> void:
 func _update_camera(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
 		return
-	var back := -player.get_forward() * 9.0
+	var back: Vector3 = -player.get_forward() * 9.0
 	if cam_reversed:
 		back = player.get_forward() * 9.0
-	var desired := player.global_position + back + Vector3(0.0, 4.5, 0.0)
+	var desired: Vector3 = player.global_position + back + Vector3(0.0, 4.5, 0.0)
 	camera.global_position = desired.lerp(camera.global_position, 1.0 - pow(0.001, delta))
-	var look := player.global_position + player.get_forward() * 10.0
+	var look: Vector3 = player.global_position + player.get_forward() * 10.0
 	camera.look_at(look, Vector3.UP)
 
 # ---------------------------------------------------------------- HUD
@@ -757,6 +756,6 @@ func quat_to_yaw(ori: Array) -> float:
 	var w := float(ori[3])
 	var q := Quaternion(x, y, z, w)
 	# car forward in game frame is +Y
-	var f_game := Vector3(0.0, 1.0, 0.0).rotated_by(q)
+	var f_game: Vector3 = q.rotate(Vector3(0.0, 1.0, 0.0))
 	var f_godot := to_godot(f_game)
 	return atan2(f_godot.x, -f_godot.z)

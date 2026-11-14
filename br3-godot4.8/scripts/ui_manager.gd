@@ -21,7 +21,6 @@ func make_bg(texture_path: String) -> TextureRect:
 	tr.texture = load(texture_path)
 	tr.stretch_mode = TextureRect.STRETCH_SCALE
 	tr.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-	tr.fit_mode = TextureRect.FIT_CENTERED
 	tr.anchors_preset = Control.PRESET_FULL_RECT
 	return tr
 
@@ -71,7 +70,7 @@ func show_screen(name: String) -> void:
 		return
 	clear_screens()
 	current = name
-	var sc := screens[name]
+	var sc: Control = screens[name]
 	if sc == null:
 		return
 	add_child(sc)
@@ -246,9 +245,10 @@ func show_car_selection() -> void:
 		btn.add_child(lbl)
 		if c == MainManager.selected_car:
 			lbl.add_theme_color_override("font_color", Color(1, 0.85, 0.2))
-		btn.pressed.connect(func(cc := c):
+		var car_name := c
+		btn.pressed.connect(func():
 			if owned:
-				MainManager.selected_car = cc
+				MainManager.selected_car = car_name
 				show_car_selection()
 		)
 		list.add_child(btn)

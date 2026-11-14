@@ -393,7 +393,7 @@ func parse_create_tile(line: String) -> Dictionary:
 		for p in parts:
 			var key := ""
 			var val := ""
-			var idx := p.find(":")
+			var idx: int = p.find(":")
 			if idx >= 0:
 				key = p.substr(0, idx).strip_edges().lstrip("#")
 				val = p.substr(idx + 1).strip_edges()
