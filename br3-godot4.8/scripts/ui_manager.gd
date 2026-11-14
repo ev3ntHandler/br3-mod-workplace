@@ -59,19 +59,20 @@ func make_button(label: String, normal: String, rollover: String, pressed: Strin
 	)
 	return b
 
-func clear_screens() -> void:
-	for s in screens:
-		var sc: Control = screens[s]
-		if is_instance_valid(sc):
-			sc.queue_free()
-	screens.clear()
-
 func show_screen(name: String) -> void:
 	if current == name and screens.has(name):
 		return
-	clear_screens()
+	# Remove only the currently displayed screen from the tree, keeping the
+	# screens registry intact. Each show_*() rebuilds its screen fresh and
+	# registers it in screens before calling show_screen(), so the registry
+	# always holds the latest build of the screen we are about to show.
+	if current != "" and screens.has(current):
+		var old: Control = screens[current]
+		if is_instance_valid(old):
+			remove_child(old)
+			old.queue_free()
 	current = name
-	var sc: Control = screens[name]
+	var sc: Control = screens.get(name)
 	if sc == null:
 		return
 	add_child(sc)
