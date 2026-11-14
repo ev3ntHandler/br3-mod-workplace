@@ -1,3 +1,4 @@
+class_name UIManager
 extends Control
 ## UIManager
 ## Builds all 2D menu screens using the original Burnin' Rubber 3 textures.

@@ -1,3 +1,4 @@
+class_name Car
 extends Node3D
 ## Car
 ## An arcade-style car with player control, AI waypoint following, health,
@@ -243,10 +244,10 @@ func fire_primary(targets: Array[Car]) -> bool:
 	var best_dist := 200.0
 	for t in targets:
 		if t is Car and not t.wrecked and t.faction != faction:
-			var to := t.global_position - global_position
-			var dist := to.length()
+			var to: Vector3 = t.global_position - global_position
+			var dist: float = to.length()
 			if dist < best_dist:
-				var dot := to.normalized().dot(fwd)
+				var dot: float = to.normalized().dot(fwd)
 				if dot > 0.3:
 					best = t
 					best_dist = dist
@@ -270,8 +271,8 @@ func fire_secondary(targets: Array[Car], race: Node) -> bool:
 	var dmg_max := float(data.get("damage", [20, 40])[1])
 	for t in targets:
 		if t is Car and not t.wrecked and t.faction != faction:
-			var to := t.global_position - global_position
-			var dist := to.length()
+			var to: Vector3 = t.global_position - global_position
+			var dist: float = to.length()
 			if dist < range and to.normalized().dot(fwd) > 0.0:
 				var dmg := randf_range(dmg_min, dmg_max)
 				t.take_damage(dmg, faction)
@@ -287,7 +288,7 @@ func update_ai(delta: float, targets: Array[Car], race: Node) -> void:
 	# find next waypoint
 	var target := path[ai_index]
 	var to := target - global_position
-	var dist := to.length()
+	var dist: float = to.length()
 	if dist < 6.0:
 		ai_index = (ai_index + 1) % path.size()
 		target = path[ai_index]
@@ -314,13 +315,13 @@ func update_ai(delta: float, targets: Array[Car], race: Node) -> void:
 		var best_d := 120.0
 		for t in targets:
 			if t is Car and not t.wrecked and t.faction != faction:
-				var d := t.global_position.distance_to(global_position)
+				var d: float = t.global_position.distance_to(global_position)
 				if d < best_d:
 					best = t
 					best_d = d
 			if best != null and best_d < 80.0:
 				# align facing
-				var to_best := best.global_position - global_position
+				var to_best: Vector3 = best.global_position - global_position
 				var desired := atan2(to_best.x, -to_best.z)
 				if abs(wrapf(desired - heading, -PI, PI)) < 0.5:
 					if primary_weapon != "NoPrimary" and primary_ammo > 0:

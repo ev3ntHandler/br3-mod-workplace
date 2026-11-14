@@ -1,3 +1,4 @@
+class_name Race
 extends Node3D
 ## Race
 ## The 3D race scene: builds the track from the original FBX tile library and

@@ -1,3 +1,4 @@
+class_name AudioManager
 extends Node
 ## AudioManager
 ## Plays the original Burnin' Rubber 3 WAV sound effects and music.

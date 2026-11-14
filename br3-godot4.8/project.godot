@@ -22,13 +22,6 @@ AudioManager="*res://scripts/audio_manager.gd"
 GameData="*res://scripts/game_data.gd"
 MainManager="*res://scripts/main_manager.gd"
 
-[global_classes]
-
-AudioManager="res://scripts/audio_manager.gd"
-Car="res://scripts/car.gd"
-Race="res://scripts/race.gd"
-UIManager="res://scripts/ui_manager.gd"
-
 [display]
 
 window/size/viewport_width=1280
