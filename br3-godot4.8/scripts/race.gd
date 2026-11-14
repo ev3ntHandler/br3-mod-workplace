@@ -755,6 +755,6 @@ func quat_to_yaw(ori: Array) -> float:
 	var w := float(ori[3])
 	var q := Quaternion(x, y, z, w)
 	# car forward in game frame is +Y
-	var f_game: Vector3 = q.xform(Vector3(0.0, 1.0, 0.0))
+	var f_game: Vector3 = Transform3D(Basis(q), Vector3.ZERO).xform(Vector3(0.0, 1.0, 0.0))
 	var f_godot := to_godot(f_game)
 	return atan2(f_godot.x, -f_godot.z)

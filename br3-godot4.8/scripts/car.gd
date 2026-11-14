@@ -214,7 +214,7 @@ func apply_road_constraint(path: Array[Vector3], delta: float) -> void:
 	var lateral := to_path - dir * to_path.dot(dir)
 	var lateral_len := lateral.length()
 	if lateral_len > 1.2:
-		var correction := -lateral.normalized() * min(lateral_len * 4.0, 40.0) * delta
+		var correction: Vector3 = -lateral.normalized() * float(min(lateral_len * 4.0, 40.0)) * delta
 		global_position += correction
 	if lateral_len > 0.4:
 		var desired := atan2(dir.x, -dir.z)
