@@ -182,7 +182,8 @@ func _build_track() -> void:
 	add_child(world_node)
 	var assets_path := "res://assets/Tracks/" + world + "/3d/" + world + "Assets.fbx"
 	var tex_dir := "res://assets/Tracks/" + world + "/Textures/"
-	var build: Array[Dictionary] = track_data.get("build", [])
+	var build: Array[Dictionary] = []
+	build.assign(track_data.get("build", []))
 	for tile in build:
 		var type: String = tile.get("type", "")
 		if type.is_empty():
@@ -256,7 +257,8 @@ func _get_standard_mat(tex_path: String, roughness: float) -> StandardMaterial3D
 func _build_ai_path() -> void:
 	global_path.clear()
 	path_points.clear()
-	var build: Array[Dictionary] = track_data.get("build", [])
+	var build: Array[Dictionary] = []
+	build.assign(track_data.get("build", []))
 	var switch_list := {
 		"SouthNorth": "NorthSouth", "NorthSouth": "SouthNorth",
 		"WestEast": "EastWest", "EastWest": "WestEast",
@@ -318,7 +320,8 @@ func _spawn_cars(car_name: String) -> void:
 	cars.append(player)
 	add_child(player)
 	# AI cars
-	var ai_list: Array[Dictionary] = track_data.get("ai_cars", [])
+	var ai_list: Array[Dictionary] = []
+	ai_list.assign(track_data.get("ai_cars", []))
 	var ai_names := ["Nissan", "Eclipse", "Corvette", "Mustang", "Porsche", "AstonMartin", "AudiR8", "FordGT", "Seat"]
 	var ai_idx := 0
 	for adata in ai_list:
@@ -344,7 +347,8 @@ func _spawn_cars(car_name: String) -> void:
 		add_child(ai)
 
 func _place_pickups() -> void:
-	var build: Array[Dictionary] = track_data.get("build", [])
+	var build: Array[Dictionary] = []
+	build.assign(track_data.get("build", []))
 	var pickup_ps := _get_fbx("res://assets/Shared/3d/PickUps.fbx")
 	if pickup_ps == null:
 		return
@@ -367,7 +371,8 @@ func _place_pickups() -> void:
 					add_child(node)
 
 func _place_traffic() -> void:
-	var build: Array[Dictionary] = track_data.get("build", [])
+	var build: Array[Dictionary] = []
+	build.assign(track_data.get("build", []))
 	var car_names := ["Lupo", "Truck", "Bus", "Transporter", "Nissan", "Eclipse", "Corvette", "Mustang", "Porsche"]
 	for tile in build:
 		for key in tile.keys():
