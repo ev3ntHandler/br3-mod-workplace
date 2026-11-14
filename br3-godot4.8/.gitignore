@@ -1,0 +1,12 @@
+# Godot generated import cache and editor state
+.godot/
+
+# Original BR3 assets are populated locally by setup_assets.sh
+# (hard-linked from ../br3-src/Data). Keep them out of git.
+assets/*
+!assets/.gitkeep
+
+# OS / editor cruft
+*.tmp
+*.log
+.DS_Store
