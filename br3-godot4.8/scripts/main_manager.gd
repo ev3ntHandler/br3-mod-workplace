@@ -1,4 +1,3 @@
-class_name MainManager
 extends Node
 ## MainManager
 ## Root controller: manages game state, UI screens and the 3D race scene.

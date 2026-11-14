@@ -221,7 +221,7 @@ func show_car_selection() -> void:
 	sc.add_child(title)
 	# car preview (skin texture)
 	var preview := TextureRect.new()
-	var car := MainManager.selected_car
+	var car: String = MainManager.selected_car
 	if car != "":
 		preview.texture = load("res://assets/Cars/SkinTextures/" + car + "Skin1_Texture.png")
 	preview.stretch_mode = TextureRect.STRETCH_SCALE
@@ -254,7 +254,7 @@ func show_car_selection() -> void:
 		)
 		list.add_child(btn)
 	# start button
-	var track := MainManager.selected_track
+	var track: String = MainManager.selected_track
 	var start := make_button(GameData.get_text("StartButton", "START"),
 		TEX + "Main/TrackNormal_Texture.png",
 		TEX + "Main/TrackRollover_Texture.png",

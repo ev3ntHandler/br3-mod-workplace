@@ -1,4 +1,3 @@
-class_name GameData
 extends Node
 ## GameData
 ## Singleton that parses the original Burnin' Rubber 3 data files (txt) into
