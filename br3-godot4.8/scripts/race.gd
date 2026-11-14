@@ -105,14 +105,13 @@ func _clear_scene() -> void:
 func _setup_environment() -> void:
 	# lighting
 	var dir := DirectionalLight3D.new()
-	dir.transform.rotation = Vector3(PI / 4, 0.3, 0.0)
+	dir.rotation = Vector3(PI / 4, 0.3, 0.0)
 	dir.light_energy = 1.2
 	add_child(dir)
-	var amb := AmbientLight3D.new()
-	amb.light_energy = 0.5
-	add_child(amb)
 	# environment with fog
 	env = Environment.new()
+	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+	env.ambient_light_energy = 0.5
 	if track_data.get("Fog", false):
 		env.fog_enabled = true
 		env.fog_light_color = Color(track_data.get("FogColor", [156,153,116]))
@@ -328,7 +327,7 @@ func _spawn_cars(car_name: String) -> void:
 			aname = ai_names[ai_idx % ai_names.size()]
 		ai_idx += 1
 		var apos := to_godot(adata.get("position", Vector3.ZERO))
-		var aori := adata.get("orientation", [0,0,0,1])
+		var aori: Array = adata.get("orientation", [0,0,0,1])
 		var ai: Car = Car.new()
 		ai.setup(aname.replace("Boss", ""), 1, false, is_boss_car)
 		ai.is_ai = true
@@ -355,7 +354,7 @@ func _place_pickups() -> void:
 			var list = tile[key]
 			if not (list is Array):
 				continue
-			var model_name := key.replace("_PickUp", "")
+			var model_name: String = key.replace("_PickUp", "")
 			for entry in list:
 				if not (entry is Dictionary):
 					continue
@@ -398,7 +397,7 @@ func _place_traffic() -> void:
 				t.ai_index = 0
 				t.position = pos
 				t.heading = quat_to_yaw(entry.get("orientation", [0,0,0,1]))
-				var color_name := key.replace(car_base, "").lowercase()
+				var color_name: String = key.replace(car_base, "").lowercase()
 				t.set_body_color(_color_for_name(color_name))
 				cars.append(t)
 				add_child(t)
@@ -756,6 +755,6 @@ func quat_to_yaw(ori: Array) -> float:
 	var w := float(ori[3])
 	var q := Quaternion(x, y, z, w)
 	# car forward in game frame is +Y
-	var f_game: Vector3 = q.rotate(Vector3(0.0, 1.0, 0.0))
+	var f_game: Vector3 = q.xform(Vector3(0.0, 1.0, 0.0))
 	var f_godot := to_godot(f_game)
 	return atan2(f_godot.x, -f_godot.z)

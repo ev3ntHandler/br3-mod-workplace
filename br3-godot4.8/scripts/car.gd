@@ -166,7 +166,7 @@ func update_physics(delta: float) -> void:
 		velocity = Vector3.ZERO
 		return
 	# forward vector (car forward is -Z in local space)
-	var forward_vec := Vector3(0.0, 0.0, -1.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
+	var forward_vec := Vector3(0.0, 0.0, -1.0).rotated(Vector3(0.0, 1.0, 0.0), heading)
 	# apply movement
 	var move := forward_vec * speed * delta
 	global_position += move
@@ -188,12 +188,12 @@ func update_physics(delta: float) -> void:
 		wrecked_signal.emit()
 
 func get_forward() -> Vector3:
-	return Vector3(0.0, 0.0, -1.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
+	return Vector3(0.0, 0.0, -1.0).rotated(Vector3(0.0, 1.0, 0.0), heading)
 
 func get_right() -> Vector3:
-	return Vector3(1.0, 0.0, 0.0).rotated_by(Vector3(0.0, 1.0, 0.0), heading)
+	return Vector3(1.0, 0.0, 0.0).rotated(Vector3(0.0, 1.0, 0.0), heading)
 
-func apply_road_constraint(path: Array, delta: float) -> void:
+func apply_road_constraint(path: Array[Vector3], delta: float) -> void:
 	if path.is_empty() or finished or wrecked:
 		return
 	var pos := global_position

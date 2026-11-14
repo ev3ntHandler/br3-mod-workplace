@@ -245,7 +245,7 @@ func show_car_selection() -> void:
 		btn.add_child(lbl)
 		if c == MainManager.selected_car:
 			lbl.add_theme_color_override("font_color", Color(1, 0.85, 0.2))
-		var car_name := c
+		var car_name: String = c
 		btn.pressed.connect(func():
 			if owned:
 				MainManager.selected_car = car_name
