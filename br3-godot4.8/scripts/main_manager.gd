@@ -42,7 +42,7 @@ func _on_start_race(track_name: String, car_name: String) -> void:
 		race_script = Race.new()
 		race.add_child(race_script)
 		race_script.finished.connect(_on_race_finished)
-	if race_script != null and race_script.is_instance_valid():
+	if race_script != null and is_instance_valid(race_script):
 		race_script.start_race(selected_track, selected_car)
 
 func _on_race_finished(result: Dictionary) -> void:
