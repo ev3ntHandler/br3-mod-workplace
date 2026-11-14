@@ -403,7 +403,7 @@ func _place_traffic() -> void:
 				t.ai_index = 0
 				t.position = pos
 				t.heading = quat_to_yaw(entry.get("orientation", [0,0,0,1]))
-				var color_name: String = key.replace(car_base, "").lowercase()
+				var color_name: String = key.replace(car_base, "").to_lower()
 				t.set_body_color(_color_for_name(color_name))
 				cars.append(t)
 				add_child(t)
